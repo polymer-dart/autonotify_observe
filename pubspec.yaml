@@ -1,0 +1,18 @@
+name: autonotify_observe
+version: 1.0.0-rc.11
+author: Vittorio Ballestra (Drafintech s.r.l.) <vittorio.ballestra@gmail.com>
+description: observe auto notify support for Polymer 1.0
+homepage : https://github.com/dam0vm3nt/autonotify_observe
+environment:
+ sdk: ">=1.8.0 <2.0.0"
+
+dependencies:
+ polymer: ">=1.0.0-rc.8"
+ observe:
+  git:
+   ref: reflectable
+   url: https://github.com/dam0vm3nt/observe.git
+ barback: any
+ test: any
+ reflectable: ">=0.4.0 <0.6.0"
+ web_components: ^0.12.0
