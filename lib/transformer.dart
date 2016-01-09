@@ -21,11 +21,24 @@ class AutonotifyObserveTransformerGroup implements TransformerGroup {
 
 /// Create deploy phases for Polymer.
 List<List<Transformer>> createDeployPhases(BarbackSettings settings) {
+  //print("autonotfy_observe with:${settings.configuration}");
   var options = new TransformOptions(
       _readFileList(settings.configuration['entry_points'])
           .map(_systemToAssetPath)
           .toList(),
       settings.mode == BarbackMode.RELEASE);
+
+  // Only autonotify and observe if no entry points
+  if (options.entryPoints==null||options.entryPoints.isEmpty) {
+    return [
+      [
+        new AutonotifyTransformer.asPlugin(new BarbackSettings({},settings.mode))
+      ],
+      [
+        new ObservableTransformer.asPlugin(new BarbackSettings({},settings.mode))
+      ]
+    ];
+  }
 
   return [
     /// Must happen first, temporarily rewrites <link rel="x-dart-test"> tags to
@@ -73,9 +86,10 @@ List<String> _readFileList(value) {
   } else {
     error = true;
   }
+  /*
   if (error) {
-    print('Invalid value for "entry_points" in the polymer transformer.');
-  }
+    print('no "entry_points" given, running only autonotify and observe.');
+  }*/
   return files;
 }
 
