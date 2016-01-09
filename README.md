@@ -24,16 +24,12 @@ To enable the autonotify feature just add the dependency to your project and add
 annotate property with `@observable` (just like in the previous polymer version). 
 
 
-## notes
-
-Latest version of this library will not depend anymore on the old `smoke` mirroring system but requires a modified `observe` that you can find [here](https://github.com/dam0vm3nt/observe/tree/reflectable), 
- until the official one gets ported to reflectable or that branch gets merged.
 
 ## using the transformer 
 
-This transfomer will replace `polymer-dart` one and adds support for observability.
+This transfomer will replace `polymer`, `observe`, and many other transformers and adds support for observability.
 
-Using this transformer you will not have to extend the `JsProxy` mixin or to annotate fields with `@reflectable` (see `polymer` docs) but instead you will have to use `Observable` mixin and `@observable` annotation (just like in the good ol' times):
+Using this transformer you will not have to extend the `JsProxy` mixin or to annotate fields with `@reflectable` (see `polymer` docs) but instead you will have to use `Observable` mixin and `@observable` annotation (just like in the good old times):
 
 ```dart
 
@@ -55,3 +51,9 @@ transformers:
 ...
 ```
 `autonotify_observe` transformer should also be placed in all your dependency libs that defines custom `polymer` components using `autonotify` and/or exporting models object extending/mixing `Observe`.
+
+## notes
+
+Latest version of this library will not depend anymore on the old `smoke` mirroring system but requires a modified `observe` that you can find [here](https://github.com/dam0vm3nt/observe/tree/reflectable).
+This version of `observe` will come implicitly as a dependency of this package thus you do not have to depend on it directly. 
+
