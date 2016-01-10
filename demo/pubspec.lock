@@ -14,9 +14,11 @@ packages:
     source: hosted
     version: "1.5.0"
   autonotify_observe:
-    description: autonotify_observe
-    source: hosted
-    version: "1.0.0+2"
+    description:
+      path: ".."
+      relative: true
+    source: path
+    version: "1.0.0+3"
   barback:
     description: barback
     source: hosted
@@ -108,6 +110,10 @@ packages:
     description: polymer
     source: hosted
     version: "1.0.0-rc.12"
+  polymer_autonotify:
+    description: polymer_autonotify
+    source: hosted
+    version: "1.0.0"
   polymer_elements:
     description: polymer_elements
     source: hosted

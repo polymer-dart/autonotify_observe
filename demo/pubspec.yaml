@@ -9,11 +9,11 @@ dependencies:
  polymer_elements: ">=1.0.0-rc.3"
  autonotify_observe: "^1.0.0-rc.10"
 
-#dependency_overrides:
+dependency_overrides:
 # polymer_autonotify:
 #  path: ..
 # autonotify_observe:
-#  path: ../../autonotify_observe
+#  path: ..
 
 
 transformers:
