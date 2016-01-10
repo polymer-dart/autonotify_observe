@@ -17,32 +17,70 @@ The opposite is true for `polymer` before 1.0 and that's one of the reason many 
 
 This package will add support for autonotify in polymer-dart 1.0, making it possible to write your code more or less in the same way you used to do with previous `polymer` version.
 
-You just have to annotate properties with `@observable` and extend/mixin the familiar `Observable` mixin, exactly like before, and `polymer_autnotify` will take care of calling `polymer` accessor API 
+## how it works
+
+You just have to annotate properties with `@observable` and extend/mixin the familiar `Observable` mixin, exactly like for previous `polymer` version, and `polymer_autnotify` will take care of calling `polymer` accessor API 
  automatically for you.
-
-To enable the autonotify feature just add the dependency to your project and add the mixin `AutonotifyBehavior` to your `PolymerElement` then 
-annotate property with `@observable` (just like in the previous polymer version). 
-
-
-
-## using the transformer 
-
-This transfomer will replace `polymer`, `observe`, and many other transformers and adds support for observability.
-
-Using this transformer you will not have to extend the `JsProxy` mixin or to annotate fields with `@reflectable` (see `polymer` docs) but instead you will have to use `Observable` mixin and `@observable` annotation (just like in the good old times):
+ 
+### The model
+ 
+Any class you intend to use as a model object should be extend or mixin `Observable`. Any property you want to be available for unidirectional or bidirectional binding should be annotatated by `@observable`. For example:
 
 ```dart
 
-class ThatBeautifulModelOfMine extends Observable {
+import "package:observe/observe.dart";
+
+class MyModel extends Observable {
  @observable String field1;
- @observable String field2;
+ @observable AnotherModel field2;
 }
+
+class AnotherModel extends Object with Observable {
+ @observable String field3;
+}
+
 ```
 
-All you have to do is to add it to your `pubspec.yaml` should appear like this :
+### The element
+
+Your `polymer` element should be defined as usual and mixin both `AutonotifyBehavior` and  `Observable`, properties should be annotated both with `@observable` and `@property` (or `@Property(...)`). Use `ObservableList` for mutable collections :
+
+```dart
+...
+import "package:polymer_autonotify/polymer_autonotify.dart" show AutonotifyBehavior;
+
+@PolymerRegister("my-element")
+class MyElement extends PolymerElement with AutonotifyBehavior,Observable {
+ @observable @property List<MyModel> prop1  = new ObservableList();
+ @observable @property String prop2;
+ 
+ 
+ MyElement.created() : super.created();
+
+ @reflectable
+ void doChange1([_,__]) {
+  prop1.add(new MyModel());
+ }
+ 
+ @reflectable
+ void doChange2([ev,__]) {
+   new DomRepeatModel.fromEvent(convertFromJs(ev))["item"].field2="hello!";
+ }
+
+}
+
+```
+
+Notice : you do not have to call list API accessor neither `set` method, just update the model and the bidings will get updated, but this should not be a big surprise after all it is all this package is all about.
+
+### using the transformer 
+
+To enable observability you have to add the `autonotify_observe` transformer to all you dart project that are using it (both your main application and any other libraries that your main application depends on and that will define model classes and/or polymer elements).
+
+The transformer can be used in place of the `polymer` transformer, in that case your `pubspec.yaml` will be simple and like this:
+
 ```yaml
 ...
-
 transformers:
  - autonotify_observe:
     entry_points:
@@ -50,10 +88,33 @@ transformers:
 
 ...
 ```
-`autonotify_observe` transformer should also be placed in all your dependency libs that defines custom `polymer` components using `autonotify` and/or exporting models object extending/mixing `Observe`.
+(entry points are those defined by the `polymer` transformer, see `polymer` documentations for that).
+
+If you prefer to use the original `polymer` transformer then you can (as a matter of fact at the moment there is no reason for doing that, but anyway the choice is yours). In this case your `pubspec.yaml` should be like this:
+
+```yaml
+...
+transformers:
+ - autonotify_observe
+ - polymer:
+    entry_points:
+    - web/index.html
+
+...
+```
+Just avoid to specify any `entry_point` for the `autonotify_observe` and enlist that transformer before `polymer` one.
+
+As already stated before if your main app imports models classes or elements from other packages then you should declare the `autonotify_observe` also in the corresponding `pubspec.yaml`, like this:
+
+```yaml
+...
+transformers:
+ - autonotify_observe
+...
+```
 
 ## notes
 
-Latest version of this library will not depend anymore on the old `smoke` mirroring system but requires a modified `observe` that you can find [here](https://github.com/dam0vm3nt/observe/tree/reflectable).
-This version of `observe` will come implicitly as a dependency of this package thus you do not have to depend on it directly. 
+`autonotify_observe` requires a modified `observe` library that you can find [here](https://github.com/dam0vm3nt/observe/tree/reflectable).
+You do not have to explicitly declare a dependency because you will implicitly get it as a dependency of this package.
 
