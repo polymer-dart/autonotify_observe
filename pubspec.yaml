@@ -15,7 +15,23 @@ dependencies:
  barback: any
  reflectable: ">=0.4.0 <0.6.0"
  web_components: ^0.12.0
+ polymer_autonotify: "^1.0.0"
 
 dev_dependencies:
  test: any
+ test: any
+
+# TODO : move tests to observe
+transformers:
+- autonotify_observe:
+   entry_points:
+    - test/autonotify_test.html
+- test/pub_serve:
+   $include: test/**_test{.*,}.dart
+
+# Comment befor publish
+dependency_overrides:
+ polymer_autonotify:
+  path: ../polymer_autonotify
+
 
