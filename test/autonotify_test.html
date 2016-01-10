@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<!--
+Copyright (c) 2015, the Dart project authors.  Please see the AUTHORS file
+for details. All rights reserved. Use of this source code is governed by a
+BSD-style license that can be found in the LICENSE file.
+-->
+<html>
+<head>
+    <script src="packages/web_components/webcomponents-lite.min.js"></script>
+    <link rel="x-dart-test" href="autonotify_test.dart">
+    <script src="packages/test/dart.js"></script>
+</head>
+<body>
+
+<dom-module id="sample-model">
+</dom-module>
+
+<dom-module id="test-element">
+    <template>
+        <div>
+
+            <template is="dom-repeat" items="{{samples}}">
+                <div f1$="{{item.field1}}" f2$="{{item.field2}}" data-marker$="{{index}}"></div>
+            </template>
+
+            <input id="message" type="text" value="{{message}}">
+            <input id="message2" type="text" value="{{message2}}">
+        </div>
+
+    </template>
+</dom-module>
+
+<dom-module id="test-main">
+    <template>
+        <sample-model id="XYZ" my-field="{{field1}}"></sample-model>
+        <test-element samples="[[samples]]" message="{{message}}" message2="{{message2.message}}"></test-element>
+        <test-element samples="[[samples]]" message="{{message}}" message2="{{myModel.myField}}"></test-element>
+    </template>
+</dom-module>
+
+</body>
+</html>

@@ -1,0 +1,13 @@
+<dom-module id="test-polymer-autonotify">
+ <template>
+	<h1> hello </h1>
+        <template is="dom-repeat" items="[[items]]">
+          <paper-item><div><span>[[item.name]]</span> -> <span>[[item.value]]</span></div> <paper-icon-button icon="icons:remove" on-tap="removeItem"></paper-icon-button></paper-item>
+	</template>
+
+	<paper-input value="{{newName}}" label="name"></paper-input>
+	<paper-input value="{{newValue}}" label="value"></paper-input>
+	<paper-icon-button icon="icons:add" on-tap="addItem">Add An Item</paper-icon-button>
+	<paper-button on-tap="doShuffle">Let's shuffle it!</paper-button>
+ </template>
+</dom-module>
