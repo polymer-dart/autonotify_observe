@@ -2,7 +2,7 @@
  <template>
 	<h1> hello </h1>
         <template is="dom-repeat" items="[[items]]">
-          <paper-item><div><span>[[item.name]]</span> -> <span>[[item.value]]</span></div> <paper-icon-button icon="icons:remove" on-tap="removeItem"></paper-icon-button></paper-item>
+          <paper-item><div><span>[[item.name]]</span> -> <span>[[item.value]]</span></div> <paper-icon-button icon="icons:remove" on-tap="removeMyItem"></paper-icon-button></paper-item>
 	</template>
 
 	<paper-input value="{{newName}}" label="name"></paper-input>

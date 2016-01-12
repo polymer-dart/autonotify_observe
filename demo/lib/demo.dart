@@ -3,8 +3,7 @@ library polymer_autonotify.demo;
 
 import "package:polymer/polymer.dart";
 import "package:web_components/web_components.dart" show HtmlImport;
-import "package:polymer_autonotify/polymer_autonotify.dart";
-import "package:observe/observe.dart";
+import "package:autonotify_observe/autonotify_observe.dart";
 
 import "package:polymer_elements/paper_item.dart";
 import "package:polymer_elements/paper_input.dart";
@@ -35,7 +34,7 @@ class TestPolymerAutonotify extends PolymerElement with AutonotifyBehavior, Obse
  }
 
  @reflectable
- void removeItem(Event ev,[_]) {
+ void removeMyItem(Event ev,[_]) {
   DomRepeatModel m = new DomRepeatModel.fromEvent(convertToJs(ev));
 
   items.remove(m["item"]);

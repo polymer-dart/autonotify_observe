@@ -12,7 +12,7 @@ dependencies:
 dependency_overrides:
 # polymer_autonotify:
 #  path: ..
-# autonotify_observe:
+#autonotify_observe:
 #  path: ..
 
 
