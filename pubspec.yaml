@@ -1,5 +1,5 @@
 name: autonotify_observe
-version: 1.0.0+4
+version: 1.0.0+5
 author: Vittorio Ballestra (Drafintech s.r.l.) <vittorio.ballestra@gmail.com>
 description: observe auto notify support for Polymer 1.0
 homepage : https://github.com/dam0vm3nt/autonotify_observe

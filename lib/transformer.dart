@@ -8,7 +8,7 @@ import 'package:path/path.dart' as path;
 import 'package:reflectable/transformer.dart';
 import 'package:web_components/transformer.dart';
 import "package:observe/transformer.dart";
-import "package:autonotify_observe/autonotify_transformer.dart";
+import "package:polymer_autonotify/transformer.dart";
 
 class AutonotifyObserveTransformerGroup implements TransformerGroup {
   final Iterable<Iterable> phases;
