@@ -4,7 +4,6 @@
 library autonotify_observe.transformer;
 
 import 'package:barback/barback.dart';
-import 'package:path/path.dart' as path;
 import "package:observe/transformer.dart";
 import "package:polymer_autonotify/transformer.dart";
 import "package:polymer/transformer.dart";
