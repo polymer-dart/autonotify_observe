@@ -14,36 +14,42 @@ import "package:polymer_elements/iron_icons.dart";
 import "dart:html";
 
 class MyItem extends Observable {
- @observable String name;
- @observable String value;
+  @observable String name;
+  @observable String value;
 
- MyItem({this.name,this.value});
+  MyItem({this.name, this.value});
 }
 
 @PolymerRegister("test-polymer-autonotify")
-class TestPolymerAutonotify extends PolymerElement with AutonotifyBehavior, Observable {
- 
- @observable @property List items = new ObservableList();
- 
- @observable @property String newName;
- @observable @property String newValue;
+class TestPolymerAutonotify extends PolymerElement
+    with AutonotifyBehavior, Observable {
+  @observable
+  @property
+  List items = new ObservableList();
 
- @reflectable
- void addItem([_,__]) {
-  items.add(new MyItem(name:newName,value:newValue));
- }
+  @observable
+  @property
+  String newName;
+  @observable
+  @property
+  String newValue;
 
- @reflectable
- void removeMyItem(Event ev,[_]) {
-  DomRepeatModel m = new DomRepeatModel.fromEvent(convertToJs(ev));
+  @reflectable
+  void addItem([_, __]) {
+    items.add(new MyItem(name: newName, value: newValue));
+  }
 
-  items.remove(m["item"]);
- }
+  @reflectable
+  void removeMyItem(Event ev, [_]) {
+    DomRepeatModel m = new DomRepeatModel.fromEvent(convertToJs(ev));
 
- @reflectable
- void doShuffle([_,__]) {
-  items.shuffle();
- }
+    items.remove(m["item"]);
+  }
 
- TestPolymerAutonotify.created() : super.created();
+  @reflectable
+  void doShuffle([_, __]) {
+    items.shuffle();
+  }
+
+  TestPolymerAutonotify.created() : super.created();
 }

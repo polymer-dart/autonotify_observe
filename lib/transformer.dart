@@ -5,10 +5,9 @@ library autonotify_observe.transformer;
 
 import 'package:barback/barback.dart';
 import 'package:path/path.dart' as path;
-import 'package:reflectable/transformer.dart';
-import 'package:web_components/transformer.dart';
 import "package:observe/transformer.dart";
 import "package:polymer_autonotify/transformer.dart";
+import "package:polymer/transformer.dart";
 
 class AutonotifyObserveTransformerGroup implements TransformerGroup {
   final Iterable<Iterable> phases;
@@ -16,89 +15,23 @@ class AutonotifyObserveTransformerGroup implements TransformerGroup {
   AutonotifyObserveTransformerGroup(BarbackSettings settings)
       : phases = createDeployPhases(settings);
 
-  AutonotifyObserveTransformerGroup.asPlugin(BarbackSettings settings) : this(settings);
+  AutonotifyObserveTransformerGroup.asPlugin(BarbackSettings settings)
+      : this(settings);
 }
 
 /// Create deploy phases for Polymer.
 List<List<Transformer>> createDeployPhases(BarbackSettings settings) {
-  //print("autonotfy_observe with:${settings.configuration}");
-  var options = new TransformOptions(
-      _readFileList(settings.configuration['entry_points'])
-          .map(_systemToAssetPath)
-          .toList(),
-      settings.mode == BarbackMode.RELEASE);
+  List<List<Transformer>> phases = [
+    [
+      new AutonotifyTransformer.asPlugin(new BarbackSettings({}, settings.mode))
+    ],
+    [new ObservableTransformer.asPlugin(new BarbackSettings({}, settings.mode))]
+  ];
 
   // Only autonotify and observe if no entry points
-  if (options.entryPoints==null||options.entryPoints.isEmpty) {
-    return [
-      [
-        new AutonotifyTransformer.asPlugin(new BarbackSettings({},settings.mode))
-      ],
-      [
-        new ObservableTransformer.asPlugin(new BarbackSettings({},settings.mode))
-      ]
-    ];
+  if (settings.configuration.containsKey("entry_points")) {
+    phases.add([new PolymerTransformerGroup.asPlugin(settings)]);
   }
 
-  return [
-    /// Must happen first, temporarily rewrites <link rel="x-dart-test"> tags to
-    /// <script type="application/dart" _was_test></script> tags.
-    [new RewriteXDartTestToScript(options.entryPoints)],
-    [new ScriptCompactorTransformer(options.entryPoints)],
-    [new WebComponentsTransformer(options)],
-    [
-      new ImportInlinerTransformer(
-          options.entryPoints, ['[[', '{{'])
-    ],
-    [
-      new AutonotifyTransformer.asPlugin(new BarbackSettings({},settings.mode))
-    ],
-    [
-      new ObservableTransformer.asPlugin(new BarbackSettings({},settings.mode))
-    ],
-    [
-      new ReflectableTransformer.asPlugin(new BarbackSettings(
-          _reflectableConfiguration(settings.configuration), settings.mode))
-    ],
-
-    /// Must happen last, rewrites
-    /// <script type="application/dart" _was_test></script> tags back to
-    /// <link rel="x-dart-test"> tags.
-    [new RewriteScriptToXDartTest(options.entryPoints)],
-  ];
-}
-
-/// Convert system paths to asset paths (asset paths are posix style).
-String _systemToAssetPath(String assetPath) {
-  if (path.Style.platform != path.Style.windows) return assetPath;
-  return path.posix.joinAll(path.split(assetPath));
-}
-
-List<String> _readFileList(value) {
-  var files = [];
-  bool error;
-  if (value is List) {
-    files = value;
-    error = value.any((e) => e is! String);
-  } else if (value is String) {
-    files = [value];
-    error = false;
-  } else {
-    error = true;
-  }
-  /*
-  if (error) {
-    print('no "entry_points" given, running only autonotify and observe.');
-  }*/
-  return files;
-}
-
-Map _reflectableConfiguration(Map originalConfiguration) {
-  return {
-    'formatted': originalConfiguration['formatted'],
-    'supressWarnings': originalConfiguration['supressWarnings'],
-    'entry_points': _readFileList(originalConfiguration['entry_points'])
-        .map((e) => e.replaceFirst('.html', '.bootstrap.initialize.dart'))
-        .toList(),
-  };
+  return phases;
 }
