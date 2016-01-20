@@ -30,6 +30,8 @@ transformers:
 
 # Comment befor publish
 #dependency_overrides:
+#  observe:
+#   path: ../observe
 # polymer_autonotify:
 #  path: ../polymer_autonotify
 
