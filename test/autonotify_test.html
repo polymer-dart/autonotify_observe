@@ -35,6 +35,7 @@ BSD-style license that can be found in the LICENSE file.
         <sample-model id="XYZ" my-field="{{field1}}"></sample-model>
         <test-element samples="[[samples]]" message="{{message}}" message2="{{message2.message}}"></test-element>
         <test-element samples="[[samples]]" message="{{message}}" message2="{{myModel.myField}}"></test-element>
+		<div id="computedDiv" computed-attr$="[[computedMessage]]"></div>
     </template>
 </dom-module>
 

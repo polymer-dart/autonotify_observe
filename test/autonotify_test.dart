@@ -276,6 +276,16 @@ main() async {
     await miracle();
   });
 
+  test('compute message',() async {
+	element.message="test1";
+	await miracle();
+	expect(element.computedMessage,"Computed test1");
+	DivElement dv = Polymer.dom(element.root).querySelector("#computedDiv");
+	expect(dv,isNotNull);
+	expect(dv.attributes["computed-attr"],"Computed test1");
+		
+  });
+
   test('pseudo shuffle elements3', () async {
     Sample s1 = new Sample("X", "Y");
     Sample s2 = new Sample("A", "C");
@@ -395,6 +405,17 @@ class TestMain extends PolymerElement
   @observable
   @Property(notify: true)
   String message = "OK";
+
+
+  //@observable
+  @Property(computed:'computeMe(message)')
+  String computedMessage;
+
+  @reflectable
+  String computeMe(String message) => "Computed $message";
+  	 
+
+
   @observable
   @Property(notify: true)
   Holder message2 = new Holder("KO");
