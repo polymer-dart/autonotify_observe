@@ -423,7 +423,7 @@ class TestMain extends PolymerElement
   @Property(notify: true)
   String field1;
 
-  @observable SampleModel myModel;
+  @observable @property SampleModel myModel;
   @property int step = 1;
 
   void ready() {
