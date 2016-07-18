@@ -26,8 +26,7 @@ main() async {
   setUp(() {
     element = document.createElement('test-main');
     //document.body.append(element);
-    List<Element> subs =
-        Polymer.dom(element.root).querySelectorAll("test-element");
+    List<Element> subs = Polymer.dom(element.root).querySelectorAll("test-element");
     subElement1 = subs[0];
     subElement2 = subs[1];
   });
@@ -56,15 +55,13 @@ main() async {
       element.samples.add(new Sample("X3", "Y3"));
       await miracle();
       //await new Future.value(true);
-      DivElement elem1 =
-          Polymer.dom(subElement1.root).querySelector("[data-marker='0']");
+      DivElement elem1 = Polymer.dom(subElement1.root).querySelector("[data-marker='0']");
       //print(subElement1.outerHtml);
       expect(elem1, isNotNull);
       expect(elem1.attributes["f1"], "X1");
       expect(elem1.attributes["f2"], "Y1");
 
-      DivElement elem2 =
-          Polymer.dom(subElement2.root).querySelector("[data-marker='1']");
+      DivElement elem2 = Polymer.dom(subElement2.root).querySelector("[data-marker='1']");
       //print(subElement1.outerHtml);
       expect(elem2, isNotNull);
       expect(elem2.attributes["f1"], "X2");
@@ -78,30 +75,24 @@ main() async {
       Sample s2 = new Sample("A", "C");
 
       await miracle();
-      expect(Polymer.dom(subElement1.root).querySelector("[data-marker='0']"),
-          isNull);
+      expect(Polymer.dom(subElement1.root).querySelector("[data-marker='0']"), isNull);
 
       mySamples.add(s1);
 
       await miracle();
-      expect(Polymer.dom(subElement1.root).querySelector("[data-marker='0']"),
-          isNotNull);
-      expect(Polymer.dom(subElement1.root).querySelector("[data-marker='1']"),
-          isNull);
+      expect(Polymer.dom(subElement1.root).querySelector("[data-marker='0']"), isNotNull);
+      expect(Polymer.dom(subElement1.root).querySelector("[data-marker='1']"), isNull);
 
       mySamples.add(s2);
 
       await miracle();
-      expect(Polymer.dom(subElement1.root).querySelector("[data-marker='0']"),
-          isNotNull);
-      expect(Polymer.dom(subElement1.root).querySelector("[data-marker='1']"),
-          isNotNull);
+      expect(Polymer.dom(subElement1.root).querySelector("[data-marker='0']"), isNotNull);
+      expect(Polymer.dom(subElement1.root).querySelector("[data-marker='1']"), isNotNull);
 
       s2.field1 = "alpha1";
 
       await miracle();
-      DivElement elem1 =
-          Polymer.dom(subElement1.root).querySelector("[data-marker='1']");
+      DivElement elem1 = Polymer.dom(subElement1.root).querySelector("[data-marker='1']");
       expect(elem1.attributes["f1"], "alpha1");
       expect(elem1.attributes["f2"], "C");
     });
@@ -113,26 +104,20 @@ main() async {
       Sample s2 = new Sample("A", "C");
 
       await miracle();
-      expect(Polymer.dom(subElement1.root).querySelector("[data-marker='0']"),
-          isNull);
+      expect(Polymer.dom(subElement1.root).querySelector("[data-marker='0']"), isNull);
 
       mySamples.add(s1);
 
       await miracle();
-      expect(Polymer.dom(subElement1.root).querySelector("[data-marker='0']"),
-          isNotNull);
-      expect(Polymer.dom(subElement1.root).querySelector("[data-marker='1']"),
-          isNull);
+      expect(Polymer.dom(subElement1.root).querySelector("[data-marker='0']"), isNotNull);
+      expect(Polymer.dom(subElement1.root).querySelector("[data-marker='1']"), isNull);
 
       mySamples.add(s2);
 
       await miracle();
-      expect(Polymer.dom(subElement1.root).querySelector("[data-marker='0']"),
-          isNotNull);
-      expect(Polymer.dom(subElement1.root).querySelector("[data-marker='1']"),
-          isNotNull);
-      DivElement elem1 =
-          Polymer.dom(subElement1.root).querySelector("[data-marker='1']");
+      expect(Polymer.dom(subElement1.root).querySelector("[data-marker='0']"), isNotNull);
+      expect(Polymer.dom(subElement1.root).querySelector("[data-marker='1']"), isNotNull);
+      DivElement elem1 = Polymer.dom(subElement1.root).querySelector("[data-marker='1']");
       expect(elem1.attributes["f1"], "A");
       expect(elem1.attributes["f2"], "C");
 
@@ -151,26 +136,20 @@ main() async {
       Sample s2 = new Sample("A", "C");
 
       await miracle();
-      expect(Polymer.dom(subElement1.root).querySelector("[data-marker='0']"),
-          isNull);
+      expect(Polymer.dom(subElement1.root).querySelector("[data-marker='0']"), isNull);
 
       mySamples.add(s1);
 
       await miracle();
-      expect(Polymer.dom(subElement1.root).querySelector("[data-marker='0']"),
-          isNotNull);
-      expect(Polymer.dom(subElement1.root).querySelector("[data-marker='1']"),
-          isNull);
+      expect(Polymer.dom(subElement1.root).querySelector("[data-marker='0']"), isNotNull);
+      expect(Polymer.dom(subElement1.root).querySelector("[data-marker='1']"), isNull);
 
       mySamples.add(s2);
 
       await miracle();
-      expect(Polymer.dom(subElement1.root).querySelector("[data-marker='0']"),
-          isNotNull);
-      expect(Polymer.dom(subElement1.root).querySelector("[data-marker='1']"),
-          isNotNull);
-      DivElement elem1 =
-          Polymer.dom(subElement1.root).querySelector("[data-marker='1']");
+      expect(Polymer.dom(subElement1.root).querySelector("[data-marker='0']"), isNotNull);
+      expect(Polymer.dom(subElement1.root).querySelector("[data-marker='1']"), isNotNull);
+      DivElement elem1 = Polymer.dom(subElement1.root).querySelector("[data-marker='1']");
       expect(elem1.attributes["f1"], "A");
       expect(elem1.attributes["f2"], "C");
 
@@ -192,26 +171,20 @@ main() async {
       Sample s2 = new Sample("A", "C");
 
       await miracle();
-      expect(Polymer.dom(subElement1.root).querySelector("[data-marker='0']"),
-          isNull);
+      expect(Polymer.dom(subElement1.root).querySelector("[data-marker='0']"), isNull);
 
       mySamples.add(s1);
 
       await miracle();
-      expect(Polymer.dom(subElement1.root).querySelector("[data-marker='0']"),
-          isNotNull);
-      expect(Polymer.dom(subElement1.root).querySelector("[data-marker='1']"),
-          isNull);
+      expect(Polymer.dom(subElement1.root).querySelector("[data-marker='0']"), isNotNull);
+      expect(Polymer.dom(subElement1.root).querySelector("[data-marker='1']"), isNull);
 
       mySamples.add(s2);
 
       await miracle();
-      expect(Polymer.dom(subElement1.root).querySelector("[data-marker='0']"),
-          isNotNull);
-      expect(Polymer.dom(subElement1.root).querySelector("[data-marker='1']"),
-          isNotNull);
-      DivElement elem1 =
-          Polymer.dom(subElement1.root).querySelector("[data-marker='1']");
+      expect(Polymer.dom(subElement1.root).querySelector("[data-marker='0']"), isNotNull);
+      expect(Polymer.dom(subElement1.root).querySelector("[data-marker='1']"), isNotNull);
+      DivElement elem1 = Polymer.dom(subElement1.root).querySelector("[data-marker='1']");
       expect(elem1.attributes["f1"], "A");
       expect(elem1.attributes["f2"], "C");
 
@@ -221,8 +194,7 @@ main() async {
       elem1 = Polymer.dom(subElement1.root).querySelector("[data-marker='0']");
       expect(elem1.attributes["f1"], "A");
       expect(elem1.attributes["f2"], "C");
-      expect(Polymer.dom(subElement1.root).querySelector("[data-marker='1']"),
-          isNull);
+      expect(Polymer.dom(subElement1.root).querySelector("[data-marker='1']"), isNull);
     });
   });
 
@@ -236,8 +208,7 @@ main() async {
     Sample s7 = new Sample("F", "C");
     Sample s8 = new Sample("G", "C");
     Sample s9 = new Sample("H", "C");
-    List<Sample> mySamples =
-        new ObservableList.from([s1, s2, s3, s4, s5, s6, s7, s8, s9]);
+    List<Sample> mySamples = new ObservableList.from([s1, s2, s3, s4, s5, s6, s7, s8, s9]);
     element.samples = mySamples;
     await miracle();
 
@@ -261,8 +232,7 @@ main() async {
     Sample s7 = new Sample("F", "C");
     Sample s8 = new Sample("G", "C");
     Sample s9 = new Sample("H", "C");
-    List<Sample> mySamples =
-        new ObservableList.from([s1, s2, s3, s4, s5, s6, s7, s8, s9]);
+    List<Sample> mySamples = new ObservableList.from([s1, s2, s3, s4, s5, s6, s7, s8, s9]);
     element.samples = mySamples;
     await miracle();
 
@@ -276,14 +246,13 @@ main() async {
     await miracle();
   });
 
-  test('compute message',() async {
-	element.message="test1";
-	await miracle();
-	expect(element.computedMessage,"Computed test1");
-	DivElement dv = Polymer.dom(element.root).querySelector("#computedDiv");
-	expect(dv,isNotNull);
-	expect(dv.attributes["computed-attr"],"Computed test1");
-		
+  test('compute message', () async {
+    element.message = "test1";
+    await miracle();
+    expect(element.computedMessage, "Computed test1");
+    DivElement dv = Polymer.dom(element.root).querySelector("#computedDiv");
+    expect(dv, isNotNull);
+    expect(dv.attributes["computed-attr"], "Computed test1");
   });
 
   test('pseudo shuffle elements3', () async {
@@ -296,8 +265,7 @@ main() async {
     Sample s7 = new Sample("F", "C");
     Sample s8 = new Sample("G", "C");
     Sample s9 = new Sample("H", "C");
-    List<Sample> mySamples =
-        new ObservableList.from([s1, s2, s3, s4, s5, s6, s7, s8, s9]);
+    List<Sample> mySamples = new ObservableList.from([s1, s2, s3, s4, s5, s6, s7, s8, s9]);
     element.samples = mySamples;
     await miracle();
 
@@ -314,6 +282,78 @@ main() async {
     mySamples.insertAll(5, [s2, s3]);
 
     print("Final : ${mySamples}");
+
+    await miracle();
+  });
+
+  test('autoref model - no autonotify', () async {
+    TestElementNoAuto el = new TestElementNoAuto();
+
+    AutoRefModelNoAuto m = new AutoRefModelNoAuto();
+    el.set('autoRefModel2', m);
+
+    await miracle();
+    el.set('autoRefModel2.autoRef', m);
+    print("Ok setting auto-reference");
+
+    await miracle();
+
+    print("About to set name");
+    el.set('autoRefModel2.name','ciccio');
+    print("Ok setting name");
+
+    await miracle();
+
+    DivElement dv = el.$['name'];
+
+    DivElement dv2 = el.$['name2'];
+    expect(dv.text,'ciccio',reason:"notification worked");
+    expect(dv2.text,'',reason:"no recursive notification");
+
+
+    print("About to remove ref");
+    el.set('autoRefModel2.autoRef',null);
+    print("Ok setting null");
+
+    expect(dv.text,'ciccio',reason:"notification worked");
+    expect(dv2.text,'',reason:"notification worked - recurr");
+
+
+    await miracle();
+  });
+
+
+  test('autoref model', () async {
+    TestElement el = new TestElement();
+
+    AutoRefModel m = new AutoRefModel();
+    el.autoRefModel = m;
+
+    await miracle();
+    m.autoRef = m;
+    print("Ok setting auto-reference");
+
+    await miracle();
+
+    print("About to set name");
+    m.name = "ciccio";
+    print("Ok setting name");
+
+    await miracle();
+
+    DivElement dv = el.$['name'];
+
+    DivElement dv2 = el.$['name2'];
+    expect(dv.text,'ciccio',reason:"notification worked");
+    expect(dv2.text,'',reason:"no recursive notification");
+
+    print("About to remove ref");
+    m.autoRef = null;
+    print("Ok setting null");
+
+    expect(dv.text,'ciccio',reason:"notification worked");
+    expect(dv2.text,'',reason:"notification worked - recurr");
+
 
     await miracle();
   });
@@ -345,18 +385,54 @@ main() async {
 
 Future miracle() => new Future.delayed(new Duration(milliseconds: 0));
 
+class AutoRefModel extends Observable {
+  @observable
+  String name;
+  @observable
+  var autoRef;
+}
+
+class AutoRefModelNoAuto extends JsProxy with ChangeNotifier {
+  @reflectable
+  String name;
+  @reflectable
+  AutoRefModelNoAuto autoRef;
+}
+
 class Sample extends Observable {
-  @observable String field1;
-  @observable String field2;
+  @observable
+  String field1;
+  @observable
+  String field2;
 
   Sample(this.field1, this.field2);
 
   String toString() => "S(${field1};${field2})";
 }
 
+@PolymerRegister('test-no-auto')
+class TestElementNoAuto extends PolymerElement {
+
+  @property
+  AutoRefModelNoAuto autoRefModel;
+
+  @Observe('autoRefModel.*')
+  void changedSomething(_) {
+    print("Changed : ${_}");
+  }
+
+  TestElementNoAuto.created() : super.created();
+
+  factory TestElementNoAuto() => new Element.tag('test-no-auto');
+}
+
 @PolymerRegister("test-element")
 class TestElement extends PolymerElement with Observable, AutonotifyBehavior {
   static final Logger _logger = new Logger("test.element.TestElement");
+
+  @observable
+  @property
+  AutoRefModel autoRefModel;
 
   @observable
   @property
@@ -378,7 +454,8 @@ class TestElement extends PolymerElement with Observable, AutonotifyBehavior {
 }
 
 class Holder extends Observable {
-  @observable String message = "OK";
+  @observable
+  String message = "OK";
   Holder(this.message);
 }
 
@@ -392,11 +469,7 @@ class SampleModel extends PolymerElement with Observable, AutonotifyBehavior {
 }
 
 @PolymerRegister("test-main")
-class TestMain extends PolymerElement
-    with
-        Observable,
-        PolymerAutoNotifySupportJsBehavior,
-        PolymerAutoNotifySupportBehavior {
+class TestMain extends PolymerElement with Observable, PolymerAutoNotifySupportJsBehavior, PolymerAutoNotifySupportBehavior {
   static final Logger _logger = new Logger("test.element.TestMain");
 
   @observable
@@ -406,15 +479,12 @@ class TestMain extends PolymerElement
   @Property(notify: true)
   String message = "OK";
 
-
   //@observable
-  @Property(computed:'computeMe(message)')
+  @Property(computed: 'computeMe(message)')
   String computedMessage;
 
   @reflectable
   String computeMe(String message) => "Computed $message";
-  	 
-
 
   @observable
   @Property(notify: true)
@@ -423,8 +493,11 @@ class TestMain extends PolymerElement
   @Property(notify: true)
   String field1;
 
-  @observable @property SampleModel myModel;
-  @property int step = 1;
+  @observable
+  @property
+  SampleModel myModel;
+  @property
+  int step = 1;
 
   void ready() {
     myModel = $["XYZ"];
@@ -505,20 +578,12 @@ class TestMain extends PolymerElement
 
   @reflectable
   void addMe2([_, __]) {
-    insert("samples", 1,
-        new Sample("banana-${counter++}", "papaghena-${counter++}"));
+    insert("samples", 1, new Sample("banana-${counter++}", "papaghena-${counter++}"));
   }
 
   @reflectable
   void doMany([_, __]) {
-    [
-      () => addEnd2(),
-      () => addEnd2(),
-      () => addEnd2(),
-      () => updateMe2(),
-      () => removeMe2(),
-      () => updateMe2()
-    ][step - 1]();
+    [() => addEnd2(), () => addEnd2(), () => addEnd2(), () => updateMe2(), () => removeMe2(), () => updateMe2()][step - 1]();
 
     set("step", step + 1);
   }

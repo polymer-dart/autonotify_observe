@@ -15,6 +15,13 @@ BSD-style license that can be found in the LICENSE file.
 <dom-module id="sample-model">
 </dom-module>
 
+<dom-module id="test-no-auto">
+    <template>
+        <div id="name">{{autoRefModel2.name}}</div>
+        <div id="name2">{{autoRefModel2.autoRef.name}}</div>
+    </template>
+</dom-module>
+
 <dom-module id="test-element">
     <template>
         <div>
@@ -25,6 +32,9 @@ BSD-style license that can be found in the LICENSE file.
 
             <input id="message" type="text" value="{{message}}">
             <input id="message2" type="text" value="{{message2}}">
+
+            <div id="name">{{autoRefModel.name}}</div>
+            <div id="name2">{{autoRefModel.autoRef.name}}</div>
         </div>
 
     </template>
