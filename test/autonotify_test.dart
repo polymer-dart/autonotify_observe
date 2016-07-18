@@ -309,7 +309,7 @@ main() async {
 
 
     el.set('autoRefModel2.autoRef',null);
-  
+
     expect(dv.text,'ciccio',reason:"notification worked");
     expect(dv2.text,'',reason:"notification worked - recurr");
 
