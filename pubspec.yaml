@@ -1,5 +1,5 @@
 name: autonotify_observe
-version: 1.0.0+9
+version: 1.0.0+10
 author: Vittorio Ballestra (Drafintech s.r.l.) <vittorio.ballestra@gmail.com>
 description: observe auto notify support for Polymer 1.0
 homepage : https://github.com/dam0vm3nt/autonotify_observe
@@ -12,10 +12,15 @@ dependencies:
   git:
    ref: reflectable
    url: https://github.com/dam0vm3nt/observe.git
+# observe:
+#  hosted:
+#   name: observe_reflectable
+#   url: http://pub.drafintech.it:5001
+#  version: ">=0.13.1+reflectable.3"
  barback: any
 # reflectable: ">=0.4.0 <0.6.0"
 # web_components: ^0.12.0
- polymer_autonotify: "^1.0.0"
+ polymer_autonotify: ">=1.0.0+3"
 
 dev_dependencies:
  test: any
@@ -29,12 +34,12 @@ transformers:
    $include: test/**_test{.*,}.dart
 
 # Comment befor publish
-dependency_overrides:
- polymer_interop:
-  path: ../polymer_interop
+#dependency_overrides:
+# polymer_interop:
+#  path: ../polymer_interop
 #  observe:
 #   path: ../observe
- polymer_autonotify:
-  path: ../polymer_autonotify
+# polymer_autonotify:
+#  path: ../polymer_autonotify
 
 

@@ -294,13 +294,10 @@ main() async {
 
     await miracle();
     el.set('autoRefModel2.autoRef', m);
-    print("Ok setting auto-reference");
 
     await miracle();
 
-    print("About to set name");
     el.set('autoRefModel2.name','ciccio');
-    print("Ok setting name");
 
     await miracle();
 
@@ -311,10 +308,8 @@ main() async {
     expect(dv2.text,'',reason:"no recursive notification");
 
 
-    print("About to remove ref");
     el.set('autoRefModel2.autoRef',null);
-    print("Ok setting null");
-
+  
     expect(dv.text,'ciccio',reason:"notification worked");
     expect(dv2.text,'',reason:"notification worked - recurr");
 
@@ -331,13 +326,10 @@ main() async {
 
     await miracle();
     m.autoRef = m;
-    print("Ok setting auto-reference");
 
     await miracle();
 
-    print("About to set name");
     m.name = "ciccio";
-    print("Ok setting name");
 
     await miracle();
 
@@ -347,9 +339,49 @@ main() async {
     expect(dv.text,'ciccio',reason:"notification worked");
     expect(dv2.text,'',reason:"no recursive notification");
 
-    print("About to remove ref");
     m.autoRef = null;
-    print("Ok setting null");
+
+    expect(dv.text,'ciccio',reason:"notification worked");
+    expect(dv2.text,'',reason:"notification worked - recurr");
+
+
+    await miracle();
+  });
+
+  test('autoref model - indirect recursion', () async {
+    TestElement el = new TestElement();
+
+    AutoRefModel m = new AutoRefModel();
+    el.autoRefModel = m;
+
+
+    await miracle();
+    AutoRefModel m1 = new AutoRefModel();
+    m.autoRef = m1;
+
+    await miracle();
+
+    m1.autoRef = m;
+
+    await miracle();
+
+
+    m.name = "ciccio";
+
+    await miracle();
+    m1.name = "ciccio";
+
+    await miracle();
+
+
+    DivElement dv = el.$['name'];
+
+    DivElement dv2 = el.$['name2'];
+    expect(dv.text,'ciccio',reason:"notification worked");
+    expect(dv2.text,'ciccio',reason:"no recursive notification");
+
+    m.autoRef = null;
+    await miracle();
 
     expect(dv.text,'ciccio',reason:"notification worked");
     expect(dv2.text,'',reason:"notification worked - recurr");
