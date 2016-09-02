@@ -9,7 +9,7 @@ import 'package:test/test.dart';
 import "package:web_components/web_components.dart" show HtmlImport;
 import "package:observe/observe.dart";
 import "package:polymer_autonotify/polymer_autonotify.dart";
-import 'package:polymer_interop/polymer_interop_config.dart';
+import 'package:polymer_interop/polymer_interop.dart';
 
 import "package:logging/logging.dart";
 

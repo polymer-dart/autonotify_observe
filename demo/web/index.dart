@@ -4,7 +4,7 @@ import "dart:html";
 import "package:demo_polymer_autonotify/demo.dart";
 
 import "package:logging/logging.dart";
-import 'package:polymer_interop/polymer_interop_config.dart';
+import 'package:polymer_interop/polymer_interop.dart';
 
 main() async {
   PolymerInteropConfiguration.listConversionStrategy = JsConversionStrategy.es6Proxy;
