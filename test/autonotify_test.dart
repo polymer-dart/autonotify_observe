@@ -9,6 +9,7 @@ import 'package:test/test.dart';
 import "package:web_components/web_components.dart" show HtmlImport;
 import "package:observe/observe.dart";
 import "package:polymer_autonotify/polymer_autonotify.dart";
+import 'package:polymer_interop/polymer_interop_config.dart';
 
 import "package:logging/logging.dart";
 
@@ -43,6 +44,36 @@ main() async {
       element.field1 = "newVal";
       await miracle();
       expect(subElement2.message2, "newVal");
+    });
+  });
+
+
+  group('es6 proxy strategy', () {
+    setUpAll(() {
+      PolymerInteropConfiguration.listConversionStrategy = JsConversionStrategy.es6Proxy;
+      PolymerInteropConfiguration.mapConversionStrategy = JsConversionStrategy.es6Proxy;
+    });
+
+    tearDownAll(() {
+      PolymerInteropConfiguration.listConversionStrategy = JsConversionStrategy.deepCopy;
+      PolymerInteropConfiguration.mapConversionStrategy = JsConversionStrategy.deepCopy;
+    });
+
+
+    group('list', () {
+      List myList = [];
+      JsObject x = convertToJs(myList);
+      x.callMethod("push",['val1']);
+      expect(myList.length, 1);
+      expect(myList[0],'val1');
+
+      myList.add('val2');
+      expect(x['length'],2);
+      expect(x['1'],'val2');
+
+      List otherList = convertToDart(x);
+
+      expect(otherList,myList);
     });
   });
 

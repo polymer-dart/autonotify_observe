@@ -34,12 +34,10 @@ transformers:
    $include: test/**_test{.*,}.dart
 
 # Comment befor publish
-#dependency_overrides:
-# polymer_interop:
-#  path: ../polymer_interop
+dependency_overrides:
+ polymer_interop:
+  path: ../polymer_interop
 #  observe:
 #   path: ../observe
 # polymer_autonotify:
 #  path: ../polymer_autonotify
-
-

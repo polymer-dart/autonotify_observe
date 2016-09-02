@@ -40,6 +40,16 @@ class TestPolymerAutonotify extends PolymerElement
   }
 
   @reflectable
+  void addItemOld([_, __]) {
+    add('items',new MyItem(name: newName, value: newValue));
+  }
+
+  @Observe('items.splices')
+  void changedItems(_) {
+    print("CHANGED ITEMS : ${_}");
+  }
+
+  @reflectable
   void removeMyItem(Event ev, [_]) {
     DomRepeatModel m = new DomRepeatModel.fromEvent(convertToJs(ev));
 
