@@ -51,16 +51,16 @@ main() async {
   group('es6 proxy strategy', () {
     setUpAll(() {
       PolymerInteropConfiguration.listConversionStrategy =
-          JsConversionStrategy.es6Proxy;
+          JsInteropStrategy.es6Proxy;
       PolymerInteropConfiguration.mapConversionStrategy =
-          JsConversionStrategy.es6Proxy;
+          JsInteropStrategy.es6Proxy;
     });
 
     tearDownAll(() {
       PolymerInteropConfiguration.listConversionStrategy =
-          JsConversionStrategy.deepCopy;
+          JsInteropStrategy.mixedMode;
       PolymerInteropConfiguration.mapConversionStrategy =
-          JsConversionStrategy.deepCopy;
+          JsInteropStrategy.mixedMode;
     });
 
     group('list', () {

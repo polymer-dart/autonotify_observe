@@ -7,8 +7,8 @@ import "package:logging/logging.dart";
 import 'package:polymer_interop/polymer_interop.dart';
 
 main() async {
-  PolymerInteropConfiguration.listConversionStrategy = JsConversionStrategy.es6Proxy;
-  PolymerInteropConfiguration.mapConversionStrategy = JsConversionStrategy.es6Proxy;
+  //PolymerInteropConfiguration.listConversionStrategy = JsConversionStrategy.es6Proxy;
+  //PolymerInteropConfiguration.mapConversionStrategy = JsConversionStrategy.es6Proxy;
 
 
   Logger.root.level = Level.FINE;
@@ -16,5 +16,5 @@ main() async {
     print('${rec.level.name}: ${rec.time}: ${rec.loggerName} - ${rec.message}');
   });
 
-  await initPolymer();
+  await initPolymer(strategy: JsInteropStrategy.es6Proxy);
 }
