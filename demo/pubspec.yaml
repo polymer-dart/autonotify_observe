@@ -9,6 +9,7 @@ dependencies:
  polymer_elements: ">=1.0.0-rc.3"
  autonotify_observe: "^1.0.0-rc.10"
  browser: any
+ custom_elements: any
 dev_dependencies:
  test: "0.12.15+1"
 

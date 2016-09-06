@@ -16,5 +16,5 @@ main() async {
     print('${rec.level.name}: ${rec.time}: ${rec.loggerName} - ${rec.message}');
   });
 
-  await initPolymer(strategy: JsInteropStrategy.es6Proxy);
+  await initPolymer(strategy: checkForEs6ProxySupport());
 }

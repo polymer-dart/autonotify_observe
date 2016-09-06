@@ -1,5 +1,10 @@
 <dom-module id="test-polymer-autonotify">
  <template>
+   <style import='iron-data-table-style'>
+    iron-data-table {
+      height:400px;
+    }
+   </style>
 	<h1> hello </h1>
   <template is="dom-repeat" items="[[items]]">
           <paper-item><div><span>[[item.name]]</span> -> <span>[[item.value]]</span></div> <paper-icon-button icon="icons:remove" on-tap="removeMyItem"></paper-icon-button></paper-item>
@@ -12,5 +17,18 @@
   <paper-button on-tap="addItemOld">Add An Item (OLD)</paper-button>
 
 	<paper-button on-tap="doShuffle">Let's shuffle it!</paper-button>
+
+  <div>Using custom data table:</div>
+
+    <iron-data-table items="[[data]]">
+      <data-table-column name="First Name">
+        <template>[[item.name.first]]</template>
+       </data-table-column>
+      <data-table-column name="Last Name">
+        <template>[[item.name.last]]</template>
+       </data-table-column>
+     </iron-data-table>
+
+
  </template>
 </dom-module>

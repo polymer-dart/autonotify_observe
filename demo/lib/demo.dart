@@ -10,12 +10,17 @@ import "package:polymer_elements/paper_input.dart";
 import "package:polymer_elements/paper_icon_button.dart";
 import "package:polymer_elements/paper_button.dart";
 import "package:polymer_elements/iron_icons.dart";
+import 'package:custom_elements/iron_data_table.dart';
+import 'package:custom_elements/data_table_column.dart';
+import 'package:custom_elements/iron_data_table_style.dart';
 
 import "dart:html";
 
 class MyItem extends Observable {
-  @observable String name;
-  @observable String value;
+  @observable
+  String name;
+  @observable
+  String value;
 
   MyItem({this.name, this.value});
 }
@@ -34,6 +39,20 @@ class TestPolymerAutonotify extends PolymerElement
   @property
   String newValue;
 
+  @observable
+  @property
+  var data = [
+    {
+      "name": {"title": "miss", "first": "donna", "last": "davis"}
+    },
+    {
+      "name": {"title": "mr", "first": "samuel", "last": "kelley"}
+    },
+    {
+      "name": {"title": "ms", "first": "katie", "last": "butler"}
+    }
+  ];
+
   @reflectable
   void addItem([_, __]) {
     items.add(new MyItem(name: newName, value: newValue));
@@ -41,7 +60,7 @@ class TestPolymerAutonotify extends PolymerElement
 
   @reflectable
   void addItemOld([_, __]) {
-    add('items',new MyItem(name: newName, value: newValue));
+    add('items', new MyItem(name: newName, value: newValue));
   }
 
   @Observe('items.splices')

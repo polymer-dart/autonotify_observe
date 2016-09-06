@@ -75,6 +75,12 @@ packages:
     description: csslib
     source: hosted
     version: "0.12.2"
+  custom_elements:
+    description:
+      name: custom_elements
+      url: "http://pub.drafintech.it:5001"
+    source: hosted
+    version: "0.0.7+2"
   dart_style:
     description: dart_style
     source: hosted
