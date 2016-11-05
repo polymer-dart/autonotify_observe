@@ -11,18 +11,18 @@ dependencies:
  browser: any
  custom_elements: any
 dev_dependencies:
- test: "0.12.15+1"
+ test: any
 
 
 dependency_overrides:
- polymer_autonotify:
-  path: ../../polymer_autonotify
- polymer_interop:
-  path: ../../polymer_interop
- polymer:
-  path: ../../polymer-dart
-#autonotify_observe:
-#  path: ..
+# polymer_autonotify:
+#  path: ../../polymer_autonotify
+  polymer_interop:
+   path: ../../polymer_interop
+# polymer:
+#  path: ../../polymer-dart
+  autonotify_observe:
+   path: ..
 
 
 transformers:
@@ -31,5 +31,5 @@ transformers:
     - web/index.html
     - test/autonotify_test.html
 
-- test/pub_serve:
-    $include: test/**_test{.*,}.dart
+#- test/pub_serve:
+#    $include: test/**_test{.*,}.dart

@@ -12,21 +12,25 @@ packages:
       name: args
       url: "http://pub.drafintech.it:5001"
     source: hosted
-    version: "0.13.5"
+    version: "0.13.6"
   async:
     description:
       name: async
       url: "http://pub.drafintech.it:5001"
     source: hosted
-    version: "1.9.0"
+    version: "1.11.3"
   autonotify_observe:
-    description: autonotify_observe
-    source: hosted
-    version: "1.0.0+5"
+    description:
+      path: ".."
+      relative: true
+    source: path
+    version: "1.0.0+10"
   barback:
-    description: barback
+    description:
+      name: barback
+      url: "http://pub.drafintech.it:5001"
     source: hosted
-    version: "0.15.2+7"
+    version: "0.15.2+9"
   boolean_selector:
     description:
       name: boolean_selector
@@ -40,11 +44,15 @@ packages:
     source: hosted
     version: "0.10.0+2"
   charcode:
-    description: charcode
+    description:
+      name: charcode
+      url: "http://pub.drafintech.it:5001"
     source: hosted
     version: "1.1.0"
   cli_util:
-    description: cli_util
+    description:
+      name: cli_util
+      url: "http://pub.drafintech.it:5001"
     source: hosted
     version: "0.0.1+2"
   code_transformers:
@@ -52,7 +60,7 @@ packages:
       name: code_transformers
       url: "http://pub.drafintech.it:5001"
     source: hosted
-    version: "0.4.2+2"
+    version: "0.4.2+3"
   collection:
     description:
       name: collection
@@ -64,27 +72,31 @@ packages:
       name: convert
       url: "http://pub.drafintech.it:5001"
     source: hosted
-    version: "1.1.1"
+    version: "2.0.1"
   crypto:
     description:
       name: crypto
       url: "http://pub.drafintech.it:5001"
     source: hosted
-    version: "1.1.1"
+    version: "2.0.1"
   csslib:
-    description: csslib
+    description:
+      name: csslib
+      url: "http://pub.drafintech.it:5001"
     source: hosted
-    version: "0.12.2"
+    version: "0.13.2+1"
   custom_elements:
     description:
       name: custom_elements
       url: "http://pub.drafintech.it:5001"
     source: hosted
-    version: "0.0.7+2"
+    version: "0.0.11+1"
   dart_style:
-    description: dart_style
+    description:
+      name: dart_style
+      url: "http://pub.drafintech.it:5001"
     source: hosted
-    version: "0.2.2"
+    version: "0.2.11+1"
   glob:
     description:
       name: glob
@@ -92,27 +104,29 @@ packages:
     source: hosted
     version: "1.1.3"
   html:
-    description: html
+    description:
+      name: html
+      url: "http://pub.drafintech.it:5001"
     source: hosted
-    version: "0.12.2+1"
+    version: "0.12.2+2"
   http:
     description:
       name: http
       url: "http://pub.drafintech.it:5001"
     source: hosted
-    version: "0.11.3+3"
+    version: "0.11.3+9"
   http_multi_server:
     description:
       name: http_multi_server
       url: "http://pub.drafintech.it:5001"
     source: hosted
-    version: "2.0.2"
+    version: "2.0.3"
   http_parser:
     description:
       name: http_parser
       url: "http://pub.drafintech.it:5001"
     source: hosted
-    version: "2.2.1"
+    version: "3.0.3"
   initialize:
     description:
       name: initialize
@@ -126,9 +140,11 @@ packages:
     source: hosted
     version: "0.2.3"
   logging:
-    description: logging
+    description:
+      name: logging
+      url: "http://pub.drafintech.it:5001"
     source: hosted
-    version: "0.11.2"
+    version: "0.11.3+1"
   matcher:
     description:
       name: matcher
@@ -143,10 +159,9 @@ packages:
     version: "0.9.3"
   observe:
     description:
-      ref: reflectable
-      resolved-ref: "1cbbefc429777da8a733ba392363029ed2e47ca1"
-      url: "https://github.com/dam0vm3nt/observe.git"
-    source: git
+      name: observe
+      url: "http://pub.drafintech.it:5001"
+    source: hosted
     version: "0.13.1+reflectable.3"
   package_config:
     description:
@@ -161,9 +176,11 @@ packages:
     source: hosted
     version: "1.0.2"
   path:
-    description: path
+    description:
+      name: path
+      url: "http://pub.drafintech.it:5001"
     source: hosted
-    version: "1.3.9"
+    version: "1.4.0"
   plugin:
     description:
       name: plugin
@@ -172,30 +189,34 @@ packages:
     version: "0.2.0"
   polymer:
     description:
-      path: "../../polymer-dart"
-      relative: true
-    source: path
-    version: "1.0.0-rc.18"
+      name: polymer
+      url: "http://pub.drafintech.it:5001"
+    source: hosted
+    version: "1.0.0-rc.18.exp.6"
   polymer_autonotify:
     description:
-      path: "../../polymer_autonotify"
-      relative: true
-    source: path
-    version: "1.0.0+3"
-  polymer_elements:
-    description: polymer_elements
+      name: polymer_autonotify
+      url: "http://pub.drafintech.it:5001"
     source: hosted
-    version: "1.0.0-rc.5"
+    version: "1.0.1"
+  polymer_elements:
+    description:
+      name: polymer_elements
+      url: "http://pub.drafintech.it:5001"
+    source: hosted
+    version: "1.0.0-rc.11+2"
   polymer_interop:
     description:
       path: "../../polymer_interop"
       relative: true
     source: path
-    version: "1.0.0-rc.10"
+    version: "1.0.0-rc.10.exp.20161031"
   pool:
-    description: pool
+    description:
+      name: pool
+      url: "http://pub.drafintech.it:5001"
     source: hosted
-    version: "1.2.1"
+    version: "1.2.4"
   pub_semver:
     description:
       name: pub_semver
@@ -213,7 +234,13 @@ packages:
       name: shelf
       url: "http://pub.drafintech.it:5001"
     source: hosted
-    version: "0.6.5"
+    version: "0.6.7+1"
+  shelf_packages_handler:
+    description:
+      name: shelf_packages_handler
+      url: "http://pub.drafintech.it:5001"
+    source: hosted
+    version: "1.0.0"
   shelf_static:
     description:
       name: shelf_static
@@ -225,7 +252,7 @@ packages:
       name: shelf_web_socket
       url: "http://pub.drafintech.it:5001"
     source: hosted
-    version: "0.2.0"
+    version: "0.2.1"
   source_map_stack_trace:
     description:
       name: source_map_stack_trace
@@ -233,33 +260,41 @@ packages:
     source: hosted
     version: "1.1.3"
   source_maps:
-    description: source_maps
+    description:
+      name: source_maps
+      url: "http://pub.drafintech.it:5001"
     source: hosted
-    version: "0.10.1"
+    version: "0.10.1+2"
   source_span:
-    description: source_span
+    description:
+      name: source_span
+      url: "http://pub.drafintech.it:5001"
     source: hosted
-    version: "1.2.1"
+    version: "1.2.4"
   stack_trace:
-    description: stack_trace
+    description:
+      name: stack_trace
+      url: "http://pub.drafintech.it:5001"
     source: hosted
-    version: "1.5.0"
+    version: "1.6.8"
   stream_channel:
     description:
       name: stream_channel
       url: "http://pub.drafintech.it:5001"
     source: hosted
-    version: "1.3.1"
+    version: "1.5.0"
   string_scanner:
-    description: string_scanner
+    description:
+      name: string_scanner
+      url: "http://pub.drafintech.it:5001"
     source: hosted
-    version: "0.1.4"
+    version: "1.0.1"
   test:
     description:
       name: test
       url: "http://pub.drafintech.it:5001"
     source: hosted
-    version: "0.12.15+1"
+    version: "0.12.15+11"
   typed_data:
     description:
       name: typed_data
@@ -267,13 +302,17 @@ packages:
     source: hosted
     version: "1.1.3"
   utf:
-    description: utf
+    description:
+      name: utf
+      url: "http://pub.drafintech.it:5001"
     source: hosted
-    version: "0.9.0+2"
+    version: "0.9.0+3"
   watcher:
-    description: watcher
+    description:
+      name: watcher
+      url: "http://pub.drafintech.it:5001"
     source: hosted
-    version: "0.9.7"
+    version: "0.9.7+3"
   web_components:
     description:
       name: web_components
@@ -287,16 +326,22 @@ packages:
     source: hosted
     version: "1.0.4"
   when:
-    description: when
+    description:
+      name: when
+      url: "http://pub.drafintech.it:5001"
     source: hosted
     version: "0.2.0"
   which:
-    description: which
+    description:
+      name: which
+      url: "http://pub.drafintech.it:5001"
     source: hosted
     version: "0.1.3"
   yaml:
-    description: yaml
+    description:
+      name: yaml
+      url: "http://pub.drafintech.it:5001"
     source: hosted
-    version: "2.1.7"
+    version: "2.1.12"
 sdks:
-  dart: ">=1.16.0 <1.20.0"
+  dart: ">=1.19.0 <2.0.0"

@@ -1,6 +1,7 @@
 @HtmlImport("demo.html")
 library polymer_autonotify.demo;
 
+import 'dart:js';
 import "package:polymer/polymer.dart";
 import "package:web_components/web_components.dart" show HtmlImport;
 import "package:autonotify_observe/autonotify_observe.dart";
@@ -13,6 +14,7 @@ import "package:polymer_elements/iron_icons.dart";
 import 'package:custom_elements/iron_data_table.dart';
 import 'package:custom_elements/data_table_column.dart';
 import 'package:custom_elements/iron_data_table_style.dart';
+import 'package:custom_elements/vaadin_grid.dart';
 
 import "dart:html";
 
@@ -41,6 +43,22 @@ class TestPolymerAutonotify extends PolymerElement
 
   @observable
   @property
+  var someColumns = [
+    {'name': 'col1','renderer': (cell) {
+      // Comment
+      print(cell);
+      (cell['element'] as Element).innerHtml = "<b>${cell['row']['data']['C1']}</b>";
+    }},
+    {'name': 'col2'},
+  ];
+
+  @observable
+  @property
+  var vaadinData  = new ObservableList();
+
+
+  @observable
+  @property
   var data = [
     {
       "name": {"title": "miss", "first": "donna", "last": "davis"}
@@ -52,6 +70,14 @@ class TestPolymerAutonotify extends PolymerElement
       "name": {"title": "ms", "first": "katie", "last": "butler"}
     }
   ];
+
+  @reflectable
+  void addToVaadin(Event ev,detail) {
+    vaadinData.add({
+      'C1' : 'A',
+      'col2' : 'B'
+    });
+  }
 
   @reflectable
   void addItem([_, __]) {
