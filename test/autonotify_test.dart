@@ -2,6 +2,7 @@
 library polymer_autonotify.tests;
 
 import 'dart:async';
+import 'dart:convert';
 import 'dart:html';
 import 'package:polymer/polymer.dart';
 import 'package:test/test.dart';
@@ -15,480 +16,6 @@ import "package:logging/logging.dart";
 
 import "dart:js";
 
-TestMain element;
-TestElement subElement1;
-TestElement subElement2;
-
-int counter = 0;
-
-main() async {
-  await initPolymer();
-
-  setUp(() {
-    element = document.createElement('test-main');
-    //document.body.append(element);
-    List<Element> subs = Polymer.dom(element.root).querySelectorAll("test-element");
-    subElement1 = subs[0];
-    subElement2 = subs[1];
-  });
-
-  test('sanity check', () {
-    expect(element, isNotNull);
-    expect(subElement1, isNotNull);
-    expect(subElement2, isNotNull);
-    expect(element.myModel, isNotNull);
-  });
-
-  group('poly model', () {
-    test("check1", () async {
-      element.field1 = "newVal";
-      await miracle();
-      expect(subElement2.message2, "newVal");
-    });
-  });
-
-
-  group('es6 proxy strategy', () {
-    setUpAll(() {
-      PolymerInteropConfiguration.listConversionStrategy = JsInteropStrategy.es6Proxy;
-      PolymerInteropConfiguration.mapConversionStrategy = JsInteropStrategy.es6Proxy;
-    });
-
-    tearDownAll(() {
-      PolymerInteropConfiguration.listConversionStrategy = JsInteropStrategy.mixedMode;
-      PolymerInteropConfiguration.mapConversionStrategy = JsInteropStrategy.mixedMode;
-    });
-
-
-    group('list', () {
-      List myList = [];
-      JsObject x = convertToJs(myList);
-      x.callMethod("push",['val1']);
-      expect(myList.length, 1);
-      expect(myList[0],'val1');
-
-      myList.add('val2');
-      expect(x['length'],2);
-      expect(x['1'],'val2');
-
-      List otherList = convertToDart(x);
-
-      expect(otherList,myList);
-    });
-  });
-
-  group('generic tests', () {
-    test('add elements', () async {
-      //element.add("samples",new Sample("X","Y"));
-
-      element.samples.add(new Sample("X1", "Y1"));
-      element.samples.add(new Sample("X2", "Y2"));
-      element.samples.add(new Sample("X3", "Y3"));
-      await miracle();
-      //await new Future.value(true);
-      DivElement elem1 = Polymer.dom(subElement1.root).querySelector("[data-marker='0']");
-      //print(subElement1.outerHtml);
-      expect(elem1, isNotNull);
-      expect(elem1.attributes["f1"], "X1");
-      expect(elem1.attributes["f2"], "Y1");
-
-      DivElement elem2 = Polymer.dom(subElement2.root).querySelector("[data-marker='1']");
-      //print(subElement1.outerHtml);
-      expect(elem2, isNotNull);
-      expect(elem2.attributes["f1"], "X2");
-      expect(elem2.attributes["f2"], "Y2");
-    });
-
-    test('update element', () async {
-      List<Sample> mySamples = new ObservableList();
-      element.samples = mySamples;
-      Sample s1 = new Sample("X", "Y");
-      Sample s2 = new Sample("A", "C");
-
-      await miracle();
-      expect(Polymer.dom(subElement1.root).querySelector("[data-marker='0']"), isNull);
-
-      mySamples.add(s1);
-
-      await miracle();
-      expect(Polymer.dom(subElement1.root).querySelector("[data-marker='0']"), isNotNull);
-      expect(Polymer.dom(subElement1.root).querySelector("[data-marker='1']"), isNull);
-
-      mySamples.add(s2);
-
-      await miracle();
-      expect(Polymer.dom(subElement1.root).querySelector("[data-marker='0']"), isNotNull);
-      expect(Polymer.dom(subElement1.root).querySelector("[data-marker='1']"), isNotNull);
-
-      s2.field1 = "alpha1";
-
-      await miracle();
-      DivElement elem1 = Polymer.dom(subElement1.root).querySelector("[data-marker='1']");
-      expect(elem1.attributes["f1"], "alpha1");
-      expect(elem1.attributes["f2"], "C");
-    });
-
-    test('replace element', () async {
-      List<Sample> mySamples = new ObservableList();
-      element.samples = mySamples;
-      Sample s1 = new Sample("X", "Y");
-      Sample s2 = new Sample("A", "C");
-
-      await miracle();
-      expect(Polymer.dom(subElement1.root).querySelector("[data-marker='0']"), isNull);
-
-      mySamples.add(s1);
-
-      await miracle();
-      expect(Polymer.dom(subElement1.root).querySelector("[data-marker='0']"), isNotNull);
-      expect(Polymer.dom(subElement1.root).querySelector("[data-marker='1']"), isNull);
-
-      mySamples.add(s2);
-
-      await miracle();
-      expect(Polymer.dom(subElement1.root).querySelector("[data-marker='0']"), isNotNull);
-      expect(Polymer.dom(subElement1.root).querySelector("[data-marker='1']"), isNotNull);
-      DivElement elem1 = Polymer.dom(subElement1.root).querySelector("[data-marker='1']");
-      expect(elem1.attributes["f1"], "A");
-      expect(elem1.attributes["f2"], "C");
-
-      mySamples[1] = new Sample("alpha1", "alpha2");
-
-      await miracle();
-      elem1 = Polymer.dom(subElement1.root).querySelector("[data-marker='1']");
-      expect(elem1.attributes["f1"], "alpha1");
-      expect(elem1.attributes["f2"], "alpha2");
-    });
-
-    test('insert element', () async {
-      List<Sample> mySamples = new ObservableList();
-      element.samples = mySamples;
-      Sample s1 = new Sample("X", "Y");
-      Sample s2 = new Sample("A", "C");
-
-      await miracle();
-      expect(Polymer.dom(subElement1.root).querySelector("[data-marker='0']"), isNull);
-
-      mySamples.add(s1);
-
-      await miracle();
-      expect(Polymer.dom(subElement1.root).querySelector("[data-marker='0']"), isNotNull);
-      expect(Polymer.dom(subElement1.root).querySelector("[data-marker='1']"), isNull);
-
-      mySamples.add(s2);
-
-      await miracle();
-      expect(Polymer.dom(subElement1.root).querySelector("[data-marker='0']"), isNotNull);
-      expect(Polymer.dom(subElement1.root).querySelector("[data-marker='1']"), isNotNull);
-      DivElement elem1 = Polymer.dom(subElement1.root).querySelector("[data-marker='1']");
-      expect(elem1.attributes["f1"], "A");
-      expect(elem1.attributes["f2"], "C");
-
-      mySamples.insert(1, new Sample("alpha1", "alpha2"));
-
-      await miracle();
-      elem1 = Polymer.dom(subElement1.root).querySelector("[data-marker='1']");
-      expect(elem1.attributes["f1"], "alpha1");
-      expect(elem1.attributes["f2"], "alpha2");
-      elem1 = Polymer.dom(subElement1.root).querySelector("[data-marker='2']");
-      expect(elem1.attributes["f1"], "A");
-      expect(elem1.attributes["f2"], "C");
-    });
-
-    test('remove element', () async {
-      List<Sample> mySamples = new ObservableList();
-      element.samples = mySamples;
-      Sample s1 = new Sample("X", "Y");
-      Sample s2 = new Sample("A", "C");
-
-      await miracle();
-      expect(Polymer.dom(subElement1.root).querySelector("[data-marker='0']"), isNull);
-
-      mySamples.add(s1);
-
-      await miracle();
-      expect(Polymer.dom(subElement1.root).querySelector("[data-marker='0']"), isNotNull);
-      expect(Polymer.dom(subElement1.root).querySelector("[data-marker='1']"), isNull);
-
-      mySamples.add(s2);
-
-      await miracle();
-      expect(Polymer.dom(subElement1.root).querySelector("[data-marker='0']"), isNotNull);
-      expect(Polymer.dom(subElement1.root).querySelector("[data-marker='1']"), isNotNull);
-      DivElement elem1 = Polymer.dom(subElement1.root).querySelector("[data-marker='1']");
-      expect(elem1.attributes["f1"], "A");
-      expect(elem1.attributes["f2"], "C");
-
-      mySamples.remove(s1);
-
-      await miracle();
-      elem1 = Polymer.dom(subElement1.root).querySelector("[data-marker='0']");
-      expect(elem1.attributes["f1"], "A");
-      expect(elem1.attributes["f2"], "C");
-      expect(Polymer.dom(subElement1.root).querySelector("[data-marker='1']"), isNull);
-    });
-  });
-
-  test('pseudo shuffle elements', () async {
-    Sample s1 = new Sample("X", "Y");
-    Sample s2 = new Sample("A", "C");
-    Sample s3 = new Sample("B", "C");
-    Sample s4 = new Sample("C", "C");
-    Sample s5 = new Sample("D", "C");
-    Sample s6 = new Sample("E", "C");
-    Sample s7 = new Sample("F", "C");
-    Sample s8 = new Sample("G", "C");
-    Sample s9 = new Sample("H", "C");
-    List<Sample> mySamples = new ObservableList.from([s1, s2, s3, s4, s5, s6, s7, s8, s9]);
-    element.samples = mySamples;
-    await miracle();
-
-    mySamples.insertAll(0, [s6, s4]);
-    //   await miracle();
-    mySamples.insertAll(3, [s9]);
-    //   await miracle();
-    mySamples.removeRange(5, 7);
-    mySamples.insertAll(5, [s8]);
-
-    await miracle();
-  });
-
-  test('pseudo shuffle elements2', () async {
-    Sample s1 = new Sample("X", "Y");
-    Sample s2 = new Sample("A", "C");
-    Sample s3 = new Sample("B", "C");
-    Sample s4 = new Sample("C", "C");
-    Sample s5 = new Sample("D", "C");
-    Sample s6 = new Sample("E", "C");
-    Sample s7 = new Sample("F", "C");
-    Sample s8 = new Sample("G", "C");
-    Sample s9 = new Sample("H", "C");
-    List<Sample> mySamples = new ObservableList.from([s1, s2, s3, s4, s5, s6, s7, s8, s9]);
-    element.samples = mySamples;
-    await miracle();
-
-//    mySamples.insertAll(0,[s6,s4]);
-    //   await miracle();
-    //   mySamples.insertAll(3,[s9]);
-    //   await miracle();
-    mySamples.removeRange(5, 6);
-    mySamples.insertAll(5, [s8, s9]);
-
-    await miracle();
-  });
-
-  test('compute message', () async {
-    element.message = "test1";
-    await miracle();
-    expect(element.computedMessage, "Computed test1");
-    DivElement dv = Polymer.dom(element.root).querySelector("#computedDiv");
-    expect(dv, isNotNull);
-    expect(dv.attributes["computed-attr"], "Computed test1");
-  });
-
-  test('pseudo shuffle elements3', () async {
-    Sample s1 = new Sample("X", "Y");
-    Sample s2 = new Sample("A", "C");
-    Sample s3 = new Sample("B", "C");
-    Sample s4 = new Sample("C", "C");
-    Sample s5 = new Sample("D", "C");
-    Sample s6 = new Sample("E", "C");
-    Sample s7 = new Sample("F", "C");
-    Sample s8 = new Sample("G", "C");
-    Sample s9 = new Sample("H", "C");
-    List<Sample> mySamples = new ObservableList.from([s1, s2, s3, s4, s5, s6, s7, s8, s9]);
-    element.samples = mySamples;
-    await miracle();
-
-//    mySamples.insertAll(0,[s6,s4]);
-    //   await miracle();
-    //   mySamples.insertAll(3,[s9]);
-    //   await miracle();
-
-    print("Initial : ${mySamples}");
-
-    mySamples.removeRange(1, 3);
-    mySamples.insertAll(2, [s7, s6]);
-    mySamples.removeRange(5, 7);
-    mySamples.insertAll(5, [s2, s3]);
-
-    print("Final : ${mySamples}");
-
-    await miracle();
-  });
-
-  test('autoref model - no autonotify', () async {
-    TestElementNoAuto el = new TestElementNoAuto();
-
-    AutoRefModelNoAuto m = new AutoRefModelNoAuto();
-    el.set('autoRefModel2', m);
-
-    await miracle();
-    el.set('autoRefModel2.autoRef', m);
-
-    await miracle();
-
-    el.set('autoRefModel2.name','ciccio');
-
-    await miracle();
-
-    DivElement dv = el.$['name'];
-
-    DivElement dv2 = el.$['name2'];
-    expect(dv.text,'ciccio',reason:"notification worked");
-    expect(dv2.text,'',reason:"no recursive notification");
-
-
-    el.set('autoRefModel2.autoRef',null);
-
-    expect(dv.text,'ciccio',reason:"notification worked");
-    expect(dv2.text,'',reason:"notification worked - recurr");
-
-
-    await miracle();
-  });
-
-
-  test('autoref model', () async {
-    TestElement el = new TestElement();
-
-    AutoRefModel m = new AutoRefModel();
-    el.autoRefModel = m;
-
-    await miracle();
-    m.autoRef = m;
-
-    await miracle();
-
-    m.name = "ciccio";
-
-    await miracle();
-
-    DivElement dv = el.$['name'];
-
-    DivElement dv2 = el.$['name2'];
-    expect(dv.text,'ciccio',reason:"notification worked");
-    expect(dv2.text,'',reason:"no recursive notification");
-
-    m.autoRef = null;
-
-    expect(dv.text,'ciccio',reason:"notification worked");
-    expect(dv2.text,'',reason:"notification worked - recurr");
-
-
-    await miracle();
-  });
-
-  test('autoref model - indirect recursion', () async {
-    TestElement el = new TestElement();
-
-    AutoRefModel m = new AutoRefModel();
-    el.autoRefModel = m;
-
-
-    await miracle();
-    AutoRefModel m1 = new AutoRefModel();
-    m.autoRef = m1;
-
-    await miracle();
-
-    m1.autoRef = m;
-
-    await miracle();
-
-
-    m.name = "ciccio";
-
-    await miracle();
-    m1.name = "ciccio";
-
-    await miracle();
-
-
-    DivElement dv = el.$['name'];
-
-    DivElement dv2 = el.$['name2'];
-    expect(dv.text,'ciccio',reason:"notification worked");
-    expect(dv2.text,'ciccio',reason:"no recursive notification");
-
-    m.autoRef = null;
-    await miracle();
-
-    expect(dv.text,'ciccio',reason:"notification worked");
-    expect(dv2.text,'',reason:"notification worked - recurr");
-
-
-    await miracle();
-  });
-
-  test('shuffle elements', () async {
-    List<Sample> mySamples = new ObservableList.from([
-      new Sample("X", "Y"),
-      new Sample("A", "C"),
-      new Sample("B", "C"),
-      new Sample("C", "C"),
-      new Sample("D", "C"),
-      new Sample("E", "C"),
-      new Sample("F", "C"),
-      new Sample("G", "C"),
-      new Sample("H", "C")
-    ]);
-    element.samples = mySamples;
-    await miracle();
-
-    for (int i = 0; i < 1000; i++) {
-      // print("Shuffle ${i} begin");
-      mySamples.shuffle();
-      // print("Shuffle ${i} end - await");
-      await miracle();
-      // print("Shuffle ${i} end - done");
-    }
-  });
-}
-
-Future miracle() => new Future.delayed(new Duration(milliseconds: 0));
-
-class AutoRefModel extends Observable {
-  @observable
-  String name;
-  @observable
-  var autoRef;
-}
-
-class AutoRefModelNoAuto extends JsProxy with ChangeNotifier {
-  @reflectable
-  String name;
-  @reflectable
-  AutoRefModelNoAuto autoRef;
-}
-
-class Sample extends Observable {
-  @observable
-  String field1;
-  @observable
-  String field2;
-
-  Sample(this.field1, this.field2);
-
-  String toString() => "S(${field1};${field2})";
-}
-
-@PolymerRegister('test-no-auto')
-class TestElementNoAuto extends PolymerElement {
-
-  @property
-  AutoRefModelNoAuto autoRefModel;
-
-  @Observe('autoRefModel.*')
-  void changedSomething(_) {
-    print("Changed : ${_}");
-  }
-
-  TestElementNoAuto.created() : super.created();
-
-  factory TestElementNoAuto() => new Element.tag('test-no-auto');
-}
-
 @PolymerRegister("test-element")
 class TestElement extends PolymerElement with Observable, AutonotifyBehavior {
   static final Logger _logger = new Logger("test.element.TestElement");
@@ -500,6 +27,10 @@ class TestElement extends PolymerElement with Observable, AutonotifyBehavior {
   @observable
   @property
   List<Sample> samples;
+
+  @observable
+  @property
+  var myMaps;
 
   @observable
   @Property(notify: true)
@@ -532,7 +63,7 @@ class SampleModel extends PolymerElement with Observable, AutonotifyBehavior {
 }
 
 @PolymerRegister("test-main")
-class TestMain extends PolymerElement with Observable, PolymerAutoNotifySupportJsBehavior, PolymerAutoNotifySupportBehavior {
+class TestMain extends PolymerElement with Observable, AutonotifyBehavior {
   static final Logger _logger = new Logger("test.element.TestMain");
 
   @observable
@@ -541,6 +72,10 @@ class TestMain extends PolymerElement with Observable, PolymerAutoNotifySupportJ
   @observable
   @Property(notify: true)
   String message = "OK";
+
+  @observable
+  @property
+  var myMaps;
 
   //@observable
   @Property(computed: 'computeMe(message)')
@@ -567,7 +102,7 @@ class TestMain extends PolymerElement with Observable, PolymerAutoNotifySupportJ
   }
 
   @reflectable
-  String clickMe([_, __]) {
+  void clickMe([_, __]) {
     print("CLICKED");
     samples.insert(1, new Sample("ciao${counter++}", "ciao${counter++}"));
   }
@@ -641,12 +176,20 @@ class TestMain extends PolymerElement with Observable, PolymerAutoNotifySupportJ
 
   @reflectable
   void addMe2([_, __]) {
-    insert("samples", 1, new Sample("banana-${counter++}", "papaghena-${counter++}"));
+    insert("samples", 1,
+        new Sample("banana-${counter++}", "papaghena-${counter++}"));
   }
 
   @reflectable
   void doMany([_, __]) {
-    [() => addEnd2(), () => addEnd2(), () => addEnd2(), () => updateMe2(), () => removeMe2(), () => updateMe2()][step - 1]();
+    [
+      () => addEnd2(),
+      () => addEnd2(),
+      () => addEnd2(),
+      () => updateMe2(),
+      () => removeMe2(),
+      () => updateMe2()
+    ][step - 1]();
 
     set("step", step + 1);
   }
@@ -656,4 +199,792 @@ class TestMain extends PolymerElement with Observable, PolymerAutoNotifySupportJ
   }
 
   factory TestMain() => (new Element.tag("test-main") as TestMain);
+}
+
+main() async {
+  await initPolymer();
+
+
+
+
+  for (JsInteropStrategy strategy in JsInteropStrategy.values) {
+    group('strategy ${strategy}', () {
+      TestMain element;
+      TestElement subElement1;
+      TestElement subElement2;
+
+      setUpAll(() {
+        PolymerDartConfiguration.jsProxyConversionStrategy = strategy;
+        PolymerInteropConfiguration.listConversionStrategy = strategy;
+        PolymerInteropConfiguration.mapConversionStrategy = strategy;
+
+
+      });
+
+      setUp(() {
+        element = new TestMain();
+        document.body.append(element);
+        List<Element> subs =
+            Polymer.dom(element.root).querySelectorAll("test-element");
+        subElement1 = subs[0];
+        subElement2 = subs[1];
+      });
+
+      tearDownAll(() {
+        PolymerDartConfiguration.jsProxyConversionStrategy =
+            JsInteropStrategy.mixedMode;
+        PolymerInteropConfiguration.listConversionStrategy =
+            JsInteropStrategy.mixedMode;
+        PolymerInteropConfiguration.mapConversionStrategy =
+            JsInteropStrategy.mixedMode;
+      });
+
+      test('sanity check', () {
+        expect(element, isNotNull);
+        expect(subElement1, isNotNull);
+        expect(subElement2, isNotNull);
+        expect(element.myModel, isNotNull);
+      });
+
+      group('poly model', () {
+        test("check1", () async {
+          element.field1 = "newVal";
+          await miracle();
+          expect(subElement2.message2, "newVal");
+        });
+      });
+
+      test('es6 proxy list', () {
+        List myList = [];
+        JsObject x = convertToJs(myList);
+        x.callMethod("push", ['val1']);
+        expect(myList.length, 1);
+        expect(myList[0], 'val1');
+
+        myList.add('val2');
+        expect(x['length'], 2);
+        expect(x['1'], 'val2');
+
+        List otherList = convertToDart(x);
+
+        expect(otherList, myList);
+      },
+          skip: strategy != JsInteropStrategy.es6Proxy
+              ? "only work with es6 proxy"
+              : null);
+
+      group('generic tests', () {
+        test('add elements', () async {
+          //element.add("samples",new Sample("X","Y"));
+
+          element.samples.add(new Sample("X1", "Y1"));
+          element.samples.add(new Sample("X2", "Y2"));
+          element.samples.add(new Sample("X3", "Y3"));
+          await miracle();
+          //await new Future.value(true);
+          DivElement elem1 =
+              Polymer.dom(subElement1.root).querySelector("[data-marker='0']");
+          //print(subElement1.outerHtml);
+          expect(elem1, isNotNull);
+          expect(elem1.attributes["f1"], "X1");
+          expect(elem1.attributes["f2"], "Y1");
+
+          DivElement elem2 =
+              Polymer.dom(subElement2.root).querySelector("[data-marker='1']");
+          //print(subElement1.outerHtml);
+          expect(elem2, isNotNull);
+          expect(elem2.attributes["f1"], "X2");
+          expect(elem2.attributes["f2"], "Y2");
+        });
+
+        test('update element', () async {
+          List<Sample> mySamples = new ObservableList();
+          element.samples = mySamples;
+          Sample s1 = new Sample("X", "Y");
+          Sample s2 = new Sample("A", "C");
+
+          await miracle();
+          expect(
+              Polymer.dom(subElement1.root).querySelector("[data-marker='0']"),
+              isNull);
+
+          mySamples.add(s1);
+
+          await miracle();
+          expect(
+              Polymer.dom(subElement1.root).querySelector("[data-marker='0']"),
+              isNotNull);
+          expect(
+              Polymer.dom(subElement1.root).querySelector("[data-marker='1']"),
+              isNull);
+
+          mySamples.add(s2);
+
+          await miracle();
+          expect(
+              Polymer.dom(subElement1.root).querySelector("[data-marker='0']"),
+              isNotNull);
+          expect(
+              Polymer.dom(subElement1.root).querySelector("[data-marker='1']"),
+              isNotNull);
+
+          s2.field1 = "alpha1";
+
+          await miracle();
+          DivElement elem1 =
+              Polymer.dom(subElement1.root).querySelector("[data-marker='1']");
+          expect(elem1.attributes["f1"], "alpha1");
+          expect(elem1.attributes["f2"], "C");
+        });
+
+        test('replace element', () async {
+          List<Sample> mySamples = new ObservableList();
+          element.samples = mySamples;
+          Sample s1 = new Sample("X", "Y");
+          Sample s2 = new Sample("A", "C");
+
+          await miracle();
+          expect(
+              Polymer.dom(subElement1.root).querySelector("[data-marker='0']"),
+              isNull);
+
+          mySamples.add(s1);
+
+          await miracle();
+          expect(
+              Polymer.dom(subElement1.root).querySelector("[data-marker='0']"),
+              isNotNull);
+          expect(
+              Polymer.dom(subElement1.root).querySelector("[data-marker='1']"),
+              isNull);
+
+          mySamples.add(s2);
+
+          await miracle();
+          expect(
+              Polymer.dom(subElement1.root).querySelector("[data-marker='0']"),
+              isNotNull);
+          expect(
+              Polymer.dom(subElement1.root).querySelector("[data-marker='1']"),
+              isNotNull);
+          DivElement elem1 =
+              Polymer.dom(subElement1.root).querySelector("[data-marker='1']");
+          expect(elem1.attributes["f1"], "A");
+          expect(elem1.attributes["f2"], "C");
+
+          mySamples[1] = new Sample("alpha1", "alpha2");
+
+          await miracle();
+          elem1 =
+              Polymer.dom(subElement1.root).querySelector("[data-marker='1']");
+          expect(elem1.attributes["f1"], "alpha1");
+          expect(elem1.attributes["f2"], "alpha2");
+        });
+
+        test('insert element', () async {
+          List<Sample> mySamples = new ObservableList();
+          element.samples = mySamples;
+          Sample s1 = new Sample("X", "Y");
+          Sample s2 = new Sample("A", "C");
+
+          await miracle();
+          expect(
+              Polymer.dom(subElement1.root).querySelector("[data-marker='0']"),
+              isNull);
+
+          mySamples.add(s1);
+
+          await miracle();
+          expect(
+              Polymer.dom(subElement1.root).querySelector("[data-marker='0']"),
+              isNotNull);
+          expect(
+              Polymer.dom(subElement1.root).querySelector("[data-marker='1']"),
+              isNull);
+
+          mySamples.add(s2);
+
+          await miracle();
+          expect(
+              Polymer.dom(subElement1.root).querySelector("[data-marker='0']"),
+              isNotNull);
+          expect(
+              Polymer.dom(subElement1.root).querySelector("[data-marker='1']"),
+              isNotNull);
+          DivElement elem1 =
+              Polymer.dom(subElement1.root).querySelector("[data-marker='1']");
+          expect(elem1.attributes["f1"], "A");
+          expect(elem1.attributes["f2"], "C");
+
+          mySamples.insert(1, new Sample("alpha1", "alpha2"));
+
+          await miracle();
+          elem1 =
+              Polymer.dom(subElement1.root).querySelector("[data-marker='1']");
+          expect(elem1.attributes["f1"], "alpha1");
+          expect(elem1.attributes["f2"], "alpha2");
+          elem1 =
+              Polymer.dom(subElement1.root).querySelector("[data-marker='2']");
+          expect(elem1.attributes["f1"], "A");
+          expect(elem1.attributes["f2"], "C");
+        });
+
+        test('insert map', () async {
+          List mySamples = new ObservableList();
+          element.myMaps = mySamples;
+          Map s1 = {'field1': 'X', 'field2': 'Y'};
+          Map s2 = {'field1': "A", 'field2': "C"};
+
+          await miracle();
+          expect(
+              Polymer
+                  .dom(subElement1.root)
+                  .querySelector("[map-data-marker='0']"),
+              isNull);
+
+          mySamples.add(s1);
+
+          await miracle();
+          expect(
+              Polymer
+                  .dom(subElement1.root)
+                  .querySelector("[map-data-marker='0']"),
+              isNotNull);
+          expect(
+              Polymer
+                  .dom(subElement1.root)
+                  .querySelector("[map-data-marker='1']"),
+              isNull);
+
+          mySamples.add(s2);
+
+          await miracle();
+          expect(
+              Polymer
+                  .dom(subElement1.root)
+                  .querySelector("[map-data-marker='0']"),
+              isNotNull);
+          expect(
+              Polymer
+                  .dom(subElement1.root)
+                  .querySelector("[map-data-marker='1']"),
+              isNotNull);
+          DivElement elem1 = Polymer
+              .dom(subElement1.root)
+              .querySelector("[map-data-marker='1']");
+          expect(elem1.attributes["f1"], "A");
+          expect(elem1.attributes["f2"], "C");
+
+          mySamples.insert(1, {'field1': 'alpha1', 'field2': 'alpha2'});
+
+          await miracle();
+          elem1 = Polymer
+              .dom(subElement1.root)
+              .querySelector("[map-data-marker='1']");
+          expect(elem1.attributes["f1"], "alpha1");
+          expect(elem1.attributes["f2"], "alpha2");
+          elem1 = Polymer
+              .dom(subElement1.root)
+              .querySelector("[map-data-marker='2']");
+          expect(elem1.attributes["f1"], "A");
+          expect(elem1.attributes["f2"], "C");
+        });
+
+        test('insert json MAP', () async {
+          List mySamples = new ObservableList();
+          element.myMaps = mySamples;
+          Map s1 = JSON.decode(JSON.encode({'field1': 'X', 'field2': 'Y'}));
+          Map s2 = JSON.decode(JSON.encode({'field1': "A", 'field2': "C"}));
+
+          await miracle();
+          expect(
+              Polymer
+                  .dom(subElement1.root)
+                  .querySelector("[map-data-marker='0']"),
+              isNull);
+
+          mySamples.add(s1);
+
+          await miracle();
+          expect(
+              Polymer
+                  .dom(subElement1.root)
+                  .querySelector("[map-data-marker='0']"),
+              isNotNull);
+          expect(
+              Polymer
+                  .dom(subElement1.root)
+                  .querySelector("[map-data-marker='1']"),
+              isNull);
+
+          mySamples.add(s2);
+
+          await miracle();
+          expect(
+              Polymer
+                  .dom(subElement1.root)
+                  .querySelector("[map-data-marker='0']"),
+              isNotNull);
+          expect(
+              Polymer
+                  .dom(subElement1.root)
+                  .querySelector("[map-data-marker='1']"),
+              isNotNull);
+          DivElement elem1 = Polymer
+              .dom(subElement1.root)
+              .querySelector("[map-data-marker='1']");
+          expect(elem1.attributes["f1"], "A");
+          expect(elem1.attributes["f2"], "C");
+
+          mySamples.insert(1, JSON.decode(JSON.encode({'field1': 'alpha1', 'field2': 'alpha2'})));
+
+          await miracle();
+          elem1 = Polymer
+              .dom(subElement1.root)
+              .querySelector("[map-data-marker='1']");
+          expect(elem1.attributes["f1"], "alpha1");
+          expect(elem1.attributes["f2"], "alpha2");
+          elem1 = Polymer
+              .dom(subElement1.root)
+              .querySelector("[map-data-marker='2']");
+          expect(elem1.attributes["f1"], "A");
+          expect(elem1.attributes["f2"], "C");
+        });
+
+        test('remove element', () async {
+          List<Sample> mySamples = new ObservableList();
+          element.samples = mySamples;
+          Sample s1 = new Sample("X", "Y");
+          Sample s2 = new Sample("A", "C");
+
+          await miracle();
+          expect(
+              Polymer.dom(subElement1.root).querySelector("[data-marker='0']"),
+              isNull);
+
+          mySamples.add(s1);
+
+          await miracle();
+          expect(
+              Polymer.dom(subElement1.root).querySelector("[data-marker='0']"),
+              isNotNull);
+          expect(
+              Polymer.dom(subElement1.root).querySelector("[data-marker='1']"),
+              isNull);
+
+          mySamples.add(s2);
+
+          await miracle();
+          expect(
+              Polymer.dom(subElement1.root).querySelector("[data-marker='0']"),
+              isNotNull);
+          expect(
+              Polymer.dom(subElement1.root).querySelector("[data-marker='1']"),
+              isNotNull);
+          DivElement elem1 =
+              Polymer.dom(subElement1.root).querySelector("[data-marker='1']");
+          expect(elem1.attributes["f1"], "A");
+          expect(elem1.attributes["f2"], "C");
+
+          mySamples.remove(s1);
+
+          await miracle();
+          elem1 =
+              Polymer.dom(subElement1.root).querySelector("[data-marker='0']");
+          expect(elem1.attributes["f1"], "A");
+          expect(elem1.attributes["f2"], "C");
+          expect(
+              Polymer.dom(subElement1.root).querySelector("[data-marker='1']"),
+              isNull);
+        });
+
+        test('remove map', () async {
+          List mySamples = new ObservableList();
+          element.myMaps = mySamples;
+
+          Map s1 = {'field1': 'X', 'field2': 'Y'};
+          Map s2 = {'field1': 'A', 'field2': 'C'};
+
+          await miracle();
+          expect(
+              Polymer
+                  .dom(subElement1.root)
+                  .querySelector("[map-data-marker='0']"),
+              isNull,reason:'list is empty');
+
+          mySamples.add(s1);
+
+          await miracle();
+          expect(
+              Polymer
+                  .dom(subElement1.root)
+                  .querySelector("[map-data-marker='0']"),
+              isNotNull);
+          expect(
+              Polymer
+                  .dom(subElement1.root)
+                  .querySelector("[map-data-marker='1']"),
+              isNull,
+              reason: 'not yet created');
+
+          mySamples.add(s2);
+
+          await miracle();
+          expect(
+              Polymer
+                  .dom(subElement1.root)
+                  .querySelector("[map-data-marker='0']"),
+              isNotNull);
+          expect(
+              Polymer
+                  .dom(subElement1.root)
+                  .querySelector("[map-data-marker='1']"),
+              isNotNull);
+          DivElement elem1 = Polymer
+              .dom(subElement1.root)
+              .querySelector("[map-data-marker='1']");
+          expect(elem1.attributes["f1"], "A");
+          expect(elem1.attributes["f2"], "C");
+
+          mySamples.remove(s1);
+
+          await miracle();
+          elem1 = Polymer
+              .dom(subElement1.root)
+              .querySelector("[map-data-marker='0']");
+          expect(elem1.attributes["f1"], "A");
+          expect(elem1.attributes["f2"], "C");
+          expect(
+              Polymer
+                  .dom(subElement1.root)
+                  .querySelector("[map-data-marker='1']"),
+              isNull,
+              reason: 'should be deleted');
+        });
+
+        test('remove map', () async {
+          List mySamples = new ObservableList();
+          element.myMaps = mySamples;
+
+          Map s1 = JSON.decode(JSON.encode({'field1': 'X', 'field2': 'Y'}));
+          Map s2 = JSON.decode(JSON.encode({'field1': 'A', 'field2': 'C'}));
+
+          await miracle();
+          expect(
+              Polymer
+                  .dom(subElement1.root)
+                  .querySelector("[map-data-marker='0']"),
+              isNull,reason:'list is empty');
+
+          mySamples.add(s1);
+
+          await miracle();
+          expect(
+              Polymer
+                  .dom(subElement1.root)
+                  .querySelector("[map-data-marker='0']"),
+              isNotNull);
+          expect(
+              Polymer
+                  .dom(subElement1.root)
+                  .querySelector("[map-data-marker='1']"),
+              isNull,
+              reason: 'not yet created');
+
+          mySamples.add(s2);
+
+          await miracle();
+          expect(
+              Polymer
+                  .dom(subElement1.root)
+                  .querySelector("[map-data-marker='0']"),
+              isNotNull);
+          expect(
+              Polymer
+                  .dom(subElement1.root)
+                  .querySelector("[map-data-marker='1']"),
+              isNotNull);
+          DivElement elem1 = Polymer
+              .dom(subElement1.root)
+              .querySelector("[map-data-marker='1']");
+          expect(elem1.attributes["f1"], "A");
+          expect(elem1.attributes["f2"], "C");
+
+          mySamples.remove(s1);
+
+          await miracle();
+          elem1 = Polymer
+              .dom(subElement1.root)
+              .querySelector("[map-data-marker='0']");
+          expect(elem1.attributes["f1"], "A");
+          expect(elem1.attributes["f2"], "C");
+          expect(
+              Polymer
+                  .dom(subElement1.root)
+                  .querySelector("[map-data-marker='1']"),
+              isNull,
+              reason: 'should be deleted');
+        });
+      });
+
+
+
+      test('pseudo shuffle elements', () async {
+        Sample s1 = new Sample("X", "Y");
+        Sample s2 = new Sample("A", "C");
+        Sample s3 = new Sample("B", "C");
+        Sample s4 = new Sample("C", "C");
+        Sample s5 = new Sample("D", "C");
+        Sample s6 = new Sample("E", "C");
+        Sample s7 = new Sample("F", "C");
+        Sample s8 = new Sample("G", "C");
+        Sample s9 = new Sample("H", "C");
+        List<Sample> mySamples =
+            new ObservableList.from([s1, s2, s3, s4, s5, s6, s7, s8, s9]);
+        element.samples = mySamples;
+        await miracle();
+
+        mySamples.insertAll(0, [s6, s4]);
+        //   await miracle();
+        mySamples.insertAll(3, [s9]);
+        //   await miracle();
+        mySamples.removeRange(5, 7);
+        mySamples.insertAll(5, [s8]);
+
+        await miracle();
+      });
+
+      test('pseudo shuffle elements2', () async {
+        Sample s1 = new Sample("X", "Y");
+        Sample s2 = new Sample("A", "C");
+        Sample s3 = new Sample("B", "C");
+        Sample s4 = new Sample("C", "C");
+        Sample s5 = new Sample("D", "C");
+        Sample s6 = new Sample("E", "C");
+        Sample s7 = new Sample("F", "C");
+        Sample s8 = new Sample("G", "C");
+        Sample s9 = new Sample("H", "C");
+        List<Sample> mySamples =
+            new ObservableList.from([s1, s2, s3, s4, s5, s6, s7, s8, s9]);
+        element.samples = mySamples;
+        await miracle();
+
+//    mySamples.insertAll(0,[s6,s4]);
+        //   await miracle();
+        //   mySamples.insertAll(3,[s9]);
+        //   await miracle();
+        mySamples.removeRange(5, 6);
+        mySamples.insertAll(5, [s8, s9]);
+
+        await miracle();
+      });
+
+      test('compute message', () async {
+        element.message = "test1";
+        await miracle();
+        expect(element.computedMessage, "Computed test1");
+        DivElement dv = Polymer.dom(element.root).querySelector("#computedDiv");
+        expect(dv, isNotNull);
+        expect(dv.attributes["computed-attr"], "Computed test1");
+      });
+
+      test('pseudo shuffle elements3', () async {
+        Sample s1 = new Sample("X", "Y");
+        Sample s2 = new Sample("A", "C");
+        Sample s3 = new Sample("B", "C");
+        Sample s4 = new Sample("C", "C");
+        Sample s5 = new Sample("D", "C");
+        Sample s6 = new Sample("E", "C");
+        Sample s7 = new Sample("F", "C");
+        Sample s8 = new Sample("G", "C");
+        Sample s9 = new Sample("H", "C");
+        List<Sample> mySamples =
+            new ObservableList.from([s1, s2, s3, s4, s5, s6, s7, s8, s9]);
+        element.samples = mySamples;
+        await miracle();
+
+//    mySamples.insertAll(0,[s6,s4]);
+        //   await miracle();
+        //   mySamples.insertAll(3,[s9]);
+        //   await miracle();
+
+        //print("Initial : ${mySamples}");
+
+        mySamples.removeRange(1, 3);
+        mySamples.insertAll(2, [s7, s6]);
+        mySamples.removeRange(5, 7);
+        mySamples.insertAll(5, [s2, s3]);
+
+        //print("Final : ${mySamples}");
+
+        await miracle();
+      });
+
+      test('autoref model - no autonotify', () async {
+        TestElementNoAuto el = new TestElementNoAuto();
+
+        AutoRefModelNoAuto m = new AutoRefModelNoAuto();
+        el.set('autoRefModel2', m);
+
+        await miracle();
+        el.set('autoRefModel2.autoRef', m);
+
+        await miracle();
+
+        el.set('autoRefModel2.name', 'ciccio');
+
+        await miracle();
+
+        DivElement dv = el.$['name'];
+
+        DivElement dv2 = el.$['name2'];
+        expect(dv.text, 'ciccio', reason: "notification worked");
+        expect(dv2.text, '', reason: "no recursive notification");
+
+        el.set('autoRefModel2.autoRef', null);
+
+        expect(dv.text, 'ciccio', reason: "notification worked");
+        expect(dv2.text, '', reason: "notification worked - recurr");
+
+        await miracle();
+      });
+
+      test('autoref model', () async {
+        TestElement el = new TestElement();
+
+        AutoRefModel m = new AutoRefModel();
+        el.autoRefModel = m;
+
+        await miracle();
+        m.autoRef = m;
+
+        await miracle();
+
+        m.name = "ciccio";
+
+        await miracle();
+
+        DivElement dv = el.$['name'];
+
+        DivElement dv2 = el.$['name2'];
+        expect(dv.text, 'ciccio', reason: "notification worked");
+        expect(dv2.text, '', reason: "no recursive notification");
+
+        m.autoRef = null;
+
+        expect(dv.text, 'ciccio', reason: "notification worked");
+        expect(dv2.text, '', reason: "notification worked - recurr");
+
+        await miracle();
+      });
+
+      test('autoref model - indirect recursion', () async {
+        TestElement el = new TestElement();
+
+        AutoRefModel m = new AutoRefModel();
+        el.autoRefModel = m;
+
+        await miracle();
+        AutoRefModel m1 = new AutoRefModel();
+        m.autoRef = m1;
+
+        await miracle();
+
+        m1.autoRef = m;
+
+        await miracle();
+
+        m.name = "ciccio";
+
+        await miracle();
+        m1.name = "ciccio";
+
+        await miracle();
+
+        DivElement dv = el.$['name'];
+
+        DivElement dv2 = el.$['name2'];
+        expect(dv.text, 'ciccio', reason: "notification worked");
+        expect(dv2.text, 'ciccio', reason: "no recursive notification");
+
+        m.autoRef = null;
+        await miracle();
+
+        expect(dv.text, 'ciccio', reason: "notification worked");
+        expect(dv2.text, '', reason: "notification worked - recurr");
+
+        await miracle();
+      });
+
+      test('shuffle elements', () async {
+        List<Sample> mySamples = new ObservableList.from([
+          new Sample("X", "Y"),
+          new Sample("A", "C"),
+          new Sample("B", "C"),
+          new Sample("C", "C"),
+          new Sample("D", "C"),
+          new Sample("E", "C"),
+          new Sample("F", "C"),
+          new Sample("G", "C"),
+          new Sample("H", "C")
+        ]);
+        element.samples = mySamples;
+        await miracle();
+
+        for (int i = 0; i < 1000; i++) {
+          // print("Shuffle ${i} begin");
+          mySamples.shuffle();
+          // print("Shuffle ${i} end - await");
+          await miracle();
+          // print("Shuffle ${i} end - done");
+        }
+      });
+    },
+        skip: (strategy == JsInteropStrategy.es6Proxy &&
+                checkForEs6ProxySupport() == JsInteropStrategy.mixedMode)
+            ? 'e6 proxy not supported'
+            : null);
+  }
+}
+
+Future miracle() => new Future.delayed(new Duration(milliseconds: 0));
+
+class AutoRefModel extends Observable {
+  @observable
+  String name;
+  @observable
+  var autoRef;
+}
+
+class AutoRefModelNoAuto extends JsProxy with ChangeNotifier {
+  @reflectable
+  String name;
+  @reflectable
+  AutoRefModelNoAuto autoRef;
+}
+
+class Sample extends Observable {
+  @observable
+  String field1;
+  @observable
+  String field2;
+
+  Sample(this.field1, this.field2);
+
+  String toString() => "S(${field1};${field2})";
+}
+
+@PolymerRegister('test-no-auto')
+class TestElementNoAuto extends PolymerElement {
+  @property
+  AutoRefModelNoAuto autoRefModel;
+
+  @Observe('autoRefModel.*')
+  void changedSomething(_) {
+    print("Changed : ${_}");
+  }
+
+  TestElementNoAuto.created() : super.created();
+
+  factory TestElementNoAuto() => new Element.tag('test-no-auto');
 }

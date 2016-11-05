@@ -26,10 +26,16 @@ BSD-style license that can be found in the LICENSE file.
     <template>
         <div>
 
-            <template is="dom-repeat" items="{{samples}}">
-                <div f1$="{{item.field1}}" f2$="{{item.field2}}" data-marker$="{{index}}"></div>
-            </template>
-
+            <div>
+              <template is="dom-repeat" items="{{samples}}">
+                  <div f1$="{{item.field1}}" f2$="{{item.field2}}" data-marker$="{{index}}"></div>
+              </template>
+            </div>
+            <div>
+              <template is='dom-repeat' items="[[myMaps]]" >
+                <div f1$="{{item.field1}}" f2$="{{item.field2}}" map-data-marker$="{{index}}"></div>
+              </template>
+            </div>
             <input id="message" type="text" value="{{message}}">
             <input id="message2" type="text" value="{{message2}}">
 
@@ -43,11 +49,12 @@ BSD-style license that can be found in the LICENSE file.
 <dom-module id="test-main">
     <template>
         <sample-model id="XYZ" my-field="{{field1}}"></sample-model>
-        <test-element samples="[[samples]]" message="{{message}}" message2="{{message2.message}}"></test-element>
+        <test-element samples="[[samples]]" my-maps="[[myMaps]]" message="{{message}}" message2="{{message2.message}}"></test-element>
         <test-element samples="[[samples]]" message="{{message}}" message2="{{myModel.myField}}"></test-element>
 		<div id="computedDiv" computed-attr$="[[computedMessage]]"></div>
     </template>
 </dom-module>
+
 
 </body>
 </html>
