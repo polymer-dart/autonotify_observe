@@ -1,5 +1,5 @@
 name: autonotify_observe
-version: 1.0.0+12
+version: 1.0.0+13
 author: Vittorio Ballestra (Drafintech s.r.l.) <vittorio.ballestra@gmail.com>
 description: observe auto notify support for Polymer 1.0
 homepage : https://github.com/dam0vm3nt/autonotify_observe
@@ -15,7 +15,7 @@ dependencies:
  observe:
   hosted:
    name: observe
-   url: http://pub.drafintech.it:5001
+   url: http://pub.dart-polymer.com
   version: "0.13.1+reflectable.4"
  barback: any
 # reflectable: ">=0.4.0 <0.6.0"
